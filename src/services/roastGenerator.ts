@@ -174,6 +174,88 @@ export function generateRoast(options: GenerateRoastOptions): RoastHoroscope {
 }
 
 /**
+ * Gets detailed breakdown of cringe level mapping for debugging/visualization
+ */
+export function getCringeMapping(cringe: Cringe): {
+  level: Cringe;
+  label: string;
+  description: string;
+  availableOptions: {
+    moods: string[];
+    workSituations: string[];
+    loveSituations: string[];
+    tips: string[];
+    emojis: string[];
+    punchlines?: string[];
+  };
+  transformFeatures: string[];
+} {
+  const labels = {
+    0: 'Mild',
+    1: 'Ironic', 
+    2: 'Sarcastic',
+    3: 'Cringe Hard'
+  };
+
+  const descriptions = {
+    0: 'Gentle and pleasant vibes',
+    1: 'Light sarcasm and wit',
+    2: 'Sharp sarcasm and attitude', 
+    3: 'Maximum chaos and cringe'
+  };
+
+  const transformFeatures = {
+    0: ['Clean text', 'No modifications', 'Pure content'],
+    1: ['10% mild emphasis phrases', '15% emoji intensification', 'Subtle enhancements'],
+    2: ['20% alternating caps (AbCdEfG)', 'Hyperbole replacements', '25% interjection insertions', '30% emoji upgrades'],
+    3: ['40% vowel elongation (wooooord)', '35% alternating caps on 2-3 words', 'Maximum hyperbole', '40% multiple interjections', '50% emoji explosion']
+  };
+
+  return {
+    level: cringe,
+    label: labels[cringe],
+    description: descriptions[cringe],
+    availableOptions: {
+      moods: moods[cringe],
+      workSituations: work[cringe],
+      loveSituations: love[cringe],
+      tips: tips[cringe],
+      emojis: emojis[cringe],
+      punchlines: cringe >= 2 ? punchlines[cringe as 2 | 3] : undefined
+    },
+    transformFeatures: transformFeatures[cringe]
+  };
+}
+
+/**
+ * Generates a preview of all possible content for a given cringe level
+ */
+export function generateCringePreview(cringe: Cringe, sign: ZodiacSign = 'aries'): {
+  sampleTexts: string[];
+  mapping: ReturnType<typeof getCringeMapping>;
+} {
+  const mapping = getCringeMapping(cringe);
+  const sampleTexts: string[] = [];
+  
+  // Generate 3 sample texts with different seeds
+  for (let i = 0; i < 3; i++) {
+    const seed = Date.now() + i * 1000;
+    const sample = generateRoast({
+      sign,
+      day: 'today',
+      cringe,
+      seed
+    });
+    sampleTexts.push(sample.text);
+  }
+  
+  return {
+    sampleTexts,
+    mapping
+  };
+}
+
+/**
  * Applies text transformations based on cringe level
  */
 function applyTransforms(text: string, cringe: Cringe, rng: () => number): string {
@@ -185,39 +267,213 @@ function applyTransforms(text: string, cringe: Cringe, rng: () => number): strin
       if (rng() < 0.1) {
         result += " (you know what I mean)";
       }
+      // 15% chance for emoji intensification
+      if (rng() < 0.15) {
+        result = intensifyEmojis(result, 1, rng);
+      }
       break;
       
     case 2:
-      // 20% chance to add caps to one word
+      // 20% chance to add alternating caps to 1-2 words
       if (rng() < 0.2) {
-        const words = result.split(' ');
-        const randomWordIndex = Math.floor(rng() * words.length);
-        words[randomWordIndex] = words[randomWordIndex].toUpperCase();
-        result = words.join(' ');
+        result = applyAlternatingCaps(result, 1, rng);
       }
-      // Add some hyperbole
-      result = result.replace(/very/gi, 'INCREDIBLY');
-      result = result.replace(/really/gi, 'ABSOLUTELY');
+      // Add hyperbole replacements
+      result = addHyperbole(result, rng);
+      // 25% chance for interjection insertions
+      if (rng() < 0.25) {
+        result = insertInterjections(result, 1, rng);
+      }
+      // 30% chance for emoji intensification
+      if (rng() < 0.3) {
+        result = intensifyEmojis(result, 2, rng);
+      }
       break;
       
     case 3:
-      // 30% chance for word elongation on vowels
-      if (rng() < 0.3) {
-        result = result.replace(/([aeiou])/gi, (match) => 
-          rng() < 0.1 ? match.repeat(3) : match
-        );
-      }
-      // More caps words
+      // 40% chance for vowel elongation on 2-3 words
       if (rng() < 0.4) {
-        const words = result.split(' ');
-        const numCapsWords = Math.floor(rng() * 3) + 1;
-        for (let i = 0; i < numCapsWords; i++) {
-          const randomWordIndex = Math.floor(rng() * words.length);
-          words[randomWordIndex] = words[randomWordIndex].toUpperCase();
-        }
-        result = words.join(' ');
+        result = elongateVowels(result, 2 + Math.floor(rng() * 2), rng);
+      }
+      // 35% chance for alternating caps on 2-3 words
+      if (rng() < 0.35) {
+        result = applyAlternatingCaps(result, 2 + Math.floor(rng() * 2), rng);
+      }
+      // Maximum hyperbole
+      result = addHyperbole(result, rng, true);
+      // 40% chance for multiple interjections
+      if (rng() < 0.4) {
+        result = insertInterjections(result, 2, rng);
+      }
+      // Maximum emoji intensification
+      if (rng() < 0.5) {
+        result = intensifyEmojis(result, 3, rng);
       }
       break;
+  }
+  
+  return result;
+}
+
+/**
+ * Applies alternating caps pattern (AbCdEfG) to random words
+ */
+function applyAlternatingCaps(text: string, wordCount: number, rng: () => number): string {
+  const words = text.split(' ');
+  const wordsToTransform = Math.min(wordCount, words.length);
+  
+  for (let i = 0; i < wordsToTransform; i++) {
+    const randomIndex = Math.floor(rng() * words.length);
+    const word = words[randomIndex];
+    
+    // Skip if word is too short or already transformed
+    if (word.length < 3 || /[A-Z].*[a-z].*[A-Z]/.test(word)) continue;
+    
+    // Apply alternating caps pattern
+    words[randomIndex] = word
+      .split('')
+      .map((char, index) => 
+        char.match(/[a-zA-Z]/) 
+          ? (index % 2 === 0 ? char.toLowerCase() : char.toUpperCase())
+          : char
+      )
+      .join('');
+  }
+  
+  return words.join(' ');
+}
+
+/**
+ * Elongates vowels in random words (wooooord)
+ */
+function elongateVowels(text: string, wordCount: number, rng: () => number): string {
+  const words = text.split(' ');
+  const wordsToTransform = Math.min(wordCount, words.length);
+  
+  for (let i = 0; i < wordsToTransform; i++) {
+    const randomIndex = Math.floor(rng() * words.length);
+    const word = words[randomIndex];
+    
+    // Skip short words or those already elongated
+    if (word.length < 3 || /([aeiou])\1{2,}/i.test(word)) continue;
+    
+    // Find vowels and elongate one randomly
+    const vowelMatches = [...word.matchAll(/[aeiou]/gi)];
+    if (vowelMatches.length > 0) {
+      const randomVowel = vowelMatches[Math.floor(rng() * vowelMatches.length)];
+      const vowelIndex = randomVowel.index!;
+      const elongationLength = 3 + Math.floor(rng() * 3); // 3-5 repetitions
+      
+      words[randomIndex] = word.slice(0, vowelIndex + 1) + 
+                          randomVowel[0].repeat(elongationLength - 1) + 
+                          word.slice(vowelIndex + 1);
+    }
+  }
+  
+  return words.join(' ');
+}
+
+/**
+ * Adds hyperbolic language replacements
+ */
+function addHyperbole(text: string, rng: () => number, intense: boolean = false): string {
+  let result = text;
+  
+  const basicReplacements = {
+    'very': 'INCREDIBLY',
+    'really': 'ABSOLUTELY', 
+    'quite': 'EXTREMELY',
+    'pretty': 'RIDICULOUSLY',
+    'rather': 'INSANELY'
+  };
+  
+  const intenseReplacements = {
+    'good': 'LEGENDARY',
+    'bad': 'CATASTROPHIC',
+    'big': 'MASSIVE',
+    'small': 'MICROSCOPIC',
+    'fast': 'LIGHTNING-SPEED',
+    'slow': 'GLACIALLY SLOW',
+    'nice': 'MIND-BLOWING',
+    'weird': 'ABSOLUTELY BONKERS'
+  };
+  
+  // Apply basic replacements
+  Object.entries(basicReplacements).forEach(([from, to]) => {
+    const regex = new RegExp(`\\b${from}\\b`, 'gi');
+    result = result.replace(regex, to);
+  });
+  
+  // Apply intense replacements if cringe level is high
+  if (intense) {
+    Object.entries(intenseReplacements).forEach(([from, to]) => {
+      const regex = new RegExp(`\\b${from}\\b`, 'gi');
+      if (rng() < 0.3) { // 30% chance for each replacement
+        result = result.replace(regex, to);
+      }
+    });
+  }
+  
+  return result;
+}
+
+/**
+ * Inserts interjections and filler words
+ */
+function insertInterjections(text: string, count: number, rng: () => number): string {
+  const interjections = [
+    'OMG', 'WOW', 'LITERALLY', 'NO CAP', 'FR FR', 'PERIODT', 
+    'SLAY', 'BESTIE', 'NOT ME', 'THE WAY', 'I CANNOT', 'BRUH'
+  ];
+  
+  const sentences = text.split(/([.!?]+)/);
+  let result = text;
+  
+  for (let i = 0; i < count; i++) {
+    const interjection = interjections[Math.floor(rng() * interjections.length)];
+    
+    if (rng() < 0.5) {
+      // Add at beginning
+      result = interjection + ', ' + result;
+    } else {
+      // Add before punctuation
+      result = result.replace(/([.!?])/, `, ${interjection}$1`);
+    }
+  }
+  
+  return result;
+}
+
+/**
+ * Intensifies emojis by adding more or upgrading them
+ */
+function intensifyEmojis(text: string, level: number, rng: () => number): string {
+  let result = text;
+  
+  const emojiUpgrades = {
+    '😊': ['😊✨', '😊💫⭐', '😊🌟💖✨'],
+    '😏': ['😏👑', '😏💅✨', '😏👑💎🔥'],
+    '😈': ['😈🔥', '😈💀🔥', '😈💀🔥💥'],
+    '🤡': ['🤡💥', '🤡🎪💥', '🤡🎪💥⚡🌪️']
+  };
+  
+  // Upgrade existing emojis
+  Object.entries(emojiUpgrades).forEach(([basic, upgrades]) => {
+    if (result.includes(basic)) {
+      const upgradeIndex = Math.min(level - 1, upgrades.length - 1);
+      result = result.replace(basic, upgrades[upgradeIndex]);
+    }
+  });
+  
+  // Add random extra emojis based on level
+  const extraEmojis = ['✨', '💫', '🔥', '💎', '⚡', '💥', '🌟', '👑'];
+  const emojisToAdd = Math.min(level, 3);
+  
+  for (let i = 0; i < emojisToAdd; i++) {
+    if (rng() < 0.4) { // 40% chance per emoji
+      const emoji = extraEmojis[Math.floor(rng() * extraEmojis.length)];
+      result += ' ' + emoji;
+    }
   }
   
   return result;

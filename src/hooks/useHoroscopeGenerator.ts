@@ -2,10 +2,10 @@ import { useState, useCallback } from 'react';
 import { ZodiacSign, Day, Mode, Cringe, Options, HoroscopeResult } from '../types';
 
 export function useHoroscopeGenerator() {
-  const [sign, setSign] = useState<ZodiacSign>('leo');
+  const [sign, setSign] = useState<ZodiacSign>('aries');
   const [day, setDay] = useState<Day>('today');
-  const [mode, setMode] = useState<Mode>('mix');
-  const [cringe, setCringe] = useState<Cringe>(1);
+  const [mode, setMode] = useState<Mode>('official');
+  const [cringe, setCringe] = useState<Cringe>(0);
   const [deterministic, setDeterministic] = useState<boolean>(false);
   const [result, setResult] = useState<HoroscopeResult | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);

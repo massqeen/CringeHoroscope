@@ -23,6 +23,7 @@ build/
 *.iml
 *.iws
 *.ipr
+.vs
 
 # Visual Studio Code
 .vscode/

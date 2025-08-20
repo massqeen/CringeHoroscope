@@ -11,8 +11,6 @@ interface HoroscopeControlsProps {
   onModeChange: (mode: Mode) => void;
   onCringeChange: (cringe: Cringe) => void;
   onDeterministicChange: (deterministic: boolean) => void;
-  onGenerate: () => void;
-  isLoading: boolean;
 }
 
 const ZODIAC_EMOJIS: Record<ZodiacSign, string> = {
@@ -48,8 +46,6 @@ export default function HoroscopeControls({
   onModeChange,
   onCringeChange,
   onDeterministicChange,
-  onGenerate,
-  isLoading,
 }: HoroscopeControlsProps) {
   const handleSignChange = (newSign: ZodiacSign) => {
     onSignChange(newSign);
@@ -69,17 +65,6 @@ export default function HoroscopeControls({
 
   const handleDeterministicChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onDeterministicChange(event.target.checked);
-  };
-
-  const handleGenerateClick = () => {
-    onGenerate();
-  };
-
-  const handleGenerateKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      onGenerate();
-    }
   };
 
   const handleSignKeyDown = (targetSign: ZodiacSign) => (event: React.KeyboardEvent) => {
@@ -278,30 +263,6 @@ export default function HoroscopeControls({
           <span className="toggle-slider"></span>
         </label>
       </div>
-
-      {/* Generate Button */}
-      <button
-        type="button"
-        onClick={handleGenerateClick}
-        onKeyDown={handleGenerateKeyDown}
-        disabled={isLoading}
-        className="button button-primary w-full text-lg py-4"
-        aria-label="Generate horoscope with current settings"
-        tabIndex={0}
-      >
-        {isLoading ? (
-          <>
-            <span className="loading"></span>
-            Consulting the sarcastic stars...
-          </>
-        ) : (
-          <>
-            <span className="text-xl">✨</span>
-            Generate My Cosmic Roast
-            <span className="text-xl">🔥</span>
-          </>
-        )}
-      </button>
     </div>
   );
 }

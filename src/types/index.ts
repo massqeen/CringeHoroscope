@@ -28,6 +28,14 @@ export interface HoroscopeResult {
   luckyNumber?: number;
 }
 
+export interface RawHoroscopeData {
+  description: string;
+  color?: string;
+  lucky_Number?: string;
+}
+
+export interface HoroscopeResponse extends Array<RawHoroscopeData> {}
+
 export const ZODIAC_SIGNS = [
   "aries", "taurus", "gemini", "cancer", "leo", "virgo",
   "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"

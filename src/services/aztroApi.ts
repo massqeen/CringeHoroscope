@@ -1,8 +1,8 @@
 import axios from 'axios';
-import type { ZodiacSign, Day, OfficialHoroscope } from '../types';
+import type { ZodiacSign, Day, OfficialHoroscope, HoroscopeResponse } from '../types';
 
 // Aztro API endpoint
-const AZTRO_API_URL = 'https://aztro.sameerkumar.website/';
+const AZTRO_API_URL = 'https://api.aistrology.beandev.xyz/v1';
 
 // Interface for Aztro API response
 interface AztroResponse {
@@ -16,18 +16,12 @@ interface AztroResponse {
   lucky_time: string;
 }
 
-/**
- * Fetches horoscope data from Aztro API
- * @param sign - Zodiac sign
- * @param day - "today" or "tomorrow"
- * @returns Promise with horoscope data
- */
+
 export async function getOfficial(
   sign: ZodiacSign, 
   day: Day
-): Promise<OfficialHoroscope> {
-  try {
-    const response = await axios.post<AztroResponse>(
+): Promise<HoroscopeResponse> {
+  const response = await axios.post<AztroResponse>(
       `${AZTRO_API_URL}?sign=${sign}&day=${day}`,
       {},
       {
@@ -38,19 +32,13 @@ export async function getOfficial(
       }
     );
 
-    const data = response.data;
+    return response.data;
     
-    return {
-      text: data.description,
-      luckyColor: data.color,
-      luckyNumber: parseInt(data.lucky_number, 10) || undefined,
-    };
-  } catch (error) {
-    console.error('Error fetching from Aztro API:', error);
-    
-    // Return fallback data if API fails
-    return getFallbackHoroscope(sign, day);
-  }
+    // return {
+    //   text: data.description,
+    //   luckyColor: data.color,
+    //   luckyNumber: parseInt(data.lucky_number, 10) || undefined,
+    // };
 }
 
 /**

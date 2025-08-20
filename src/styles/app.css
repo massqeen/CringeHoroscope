@@ -434,6 +434,90 @@ span[role="button"]:focus-visible {
   }
 }
 
+/* Horoscope Display Component */
+.horoscope-display {
+  width: 100%;
+}
+
+.horoscope-display .status-banner {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid;
+  font-size: var(--font-size-sm);
+}
+
+.horoscope-display .status-banner.success {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--success);
+}
+
+.horoscope-display .status-banner.error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--error);
+}
+
+.horoscope-display .result-section {
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.horoscope-display .result-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+}
+
+.horoscope-display .result-text {
+  background: var(--background);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.horoscope-display .badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.horoscope-display .info-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+.horoscope-display .info-grid > div {
+  font-size: var(--font-size-sm);
+}
+
+.horoscope-display .content-pool-info {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
 /* Loading animation */
 .loading {
   display: inline-block;

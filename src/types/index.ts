@@ -1,6 +1,6 @@
 export type Cringe = 0 | 1 | 2 | 3;
 export type Mode = "official" | "roast" | "mix";
-export type Day = "today" | "tomorrow";
+export type Day = "yesterday" | "today" | "tomorrow";
 
 export interface Options {
   sign: ZodiacSign;

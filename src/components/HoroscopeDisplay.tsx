@@ -158,7 +158,15 @@ const HoroscopeDisplay = ({
       'lilac': '#c8a2c8',
       'obsidian': '#0f1419',
       'lavender': '#e6e6fa',
-      'gold': '#ffd700'
+      'gold': '#ffd700',
+      // Fixed background colors
+      'navy-blue': '#000080',
+      'amber': '#ffbf00',
+      'jade-green': '#00a86b',
+      'mahogany': '#c04000',
+      'amethyst': '#9966cc',
+      'sea green': '#2e8b57',
+      'brown': '#a52a2a'
     };
 
     let hex = color.toLowerCase();
@@ -195,6 +203,54 @@ const HoroscopeDisplay = ({
 
   // Function to get appropriate text color for background
   const getTextColor = (backgroundColor: string): string => {
+    // Check if this is a known color
+    const namedColors: Record<string, string> = {
+      'white': '#ffffff',
+      'black': '#000000',
+      'red': '#ff0000',
+      'green': '#008000',
+      'blue': '#0000ff',
+      'yellow': '#ffff00',
+      'cyan': '#00ffff',
+      'magenta': '#ff00ff',
+      'silver': '#c0c0c0',
+      'gray': '#808080',
+      'grey': '#808080',
+      'maroon': '#800000',
+      'olive': '#808000',
+      'lime': '#00ff00',
+      'aqua': '#00ffff',
+      'teal': '#008080',
+      'navy': '#000080',
+      'fuchsia': '#ff00ff',
+      'purple': '#800080',
+      'orange': '#ffa500',
+      'pink': '#ffc0cb',
+      'bronze': '#cd7f32',
+      'slate-gray': '#708090',
+      'slate gray': '#708090',
+      'slategray': '#708090',
+      'lilac': '#c8a2c8',
+      'obsidian': '#0f1419',
+      'lavender': '#e6e6fa',
+      'gold': '#ffd700',
+      'navy-blue': '#000080',
+      'amber': '#ffbf00',
+      'jade-green': '#00a86b',
+      'mahogany': '#c04000',
+      'amethyst': '#9966cc',
+      'sea green': '#2e8b57',
+      'brown': '#a52a2a'
+    };
+    
+    const lowerColor = backgroundColor.toLowerCase();
+    
+    // If it's an unknown color, return black text (since unknown colors display as white)
+    if (!namedColors[lowerColor] && !backgroundColor.startsWith('#')) {
+      return '#000000';
+    }
+    
+    // For known colors or hex colors, use the light/dark calculation
     return isLightColor(backgroundColor) ? '#000000' : '#ffffff';
   };
 
@@ -231,13 +287,21 @@ const HoroscopeDisplay = ({
       'lilac': '#c8a2c8',
       'obsidian': '#0f1419',
       'lavender': '#e6e6fa',
-      'gold': '#ffd700'
+      'gold': '#ffd700',
+      // Fixed background colors
+      'navy-blue': '#000080',
+      'amber': '#ffbf00',
+      'jade-green': '#00a86b',
+      'mahogany': '#c04000',
+      'amethyst': '#9966cc',
+      'sea green': '#2e8b57',
+      'brown': '#a52a2a'
     };
 
     const lowerColor = color.toLowerCase();
     
-    // Return hex value if we have it, otherwise return the original color
-    return namedColors[lowerColor] || color;
+    // Return hex value if we have it, otherwise return white for unknown colors
+    return namedColors[lowerColor] || '#ffffff';
   };
 
   const handleGenerateResult = async (): Promise<void> => {

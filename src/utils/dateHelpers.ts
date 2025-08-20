@@ -6,6 +6,15 @@ export function getCurrentDateString(): string {
 }
 
 /**
+ * Get yesterday's date in YYYY-MM-DD format
+ */
+export function getYesterdayDateString(): string {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  return yesterday.toISOString().split('T')[0];
+}
+
+/**
  * Get tomorrow's date in YYYY-MM-DD format
  */
 export function getTomorrowDateString(): string {
@@ -17,6 +26,14 @@ export function getTomorrowDateString(): string {
 /**
  * Get date string for the specified day option
  */
-export function getDateString(day: "today" | "tomorrow"): string {
-  return day === "today" ? getCurrentDateString() : getTomorrowDateString();
+export function getDateString(day: "yesterday" | "today" | "tomorrow"): string {
+  switch (day) {
+    case "yesterday":
+      return getYesterdayDateString();
+    case "tomorrow":
+      return getTomorrowDateString();
+    case "today":
+    default:
+      return getCurrentDateString();
+  }
 }

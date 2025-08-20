@@ -119,6 +119,7 @@ export default function HoroscopeControls({
           className="select"
           aria-label="Select day for horoscope"
         >
+          <option value="yesterday">🌆 Yesterday</option>
           <option value="today">🌅 Today</option>
           <option value="tomorrow">🌄 Tomorrow</option>
         </select>

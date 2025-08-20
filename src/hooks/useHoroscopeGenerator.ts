@@ -18,9 +18,20 @@ export function useHoroscopeGenerator() {
   // Generate deterministic seed based on sign, date, and cringe level
   const generateDeterministicSeed = useCallback((options: Options): number => {
     const date = new Date();
-    const dateString = day === 'tomorrow'
-      ? new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      : date.toISOString().split('T')[0];
+    let dateString: string;
+    
+    switch (day) {
+      case 'yesterday':
+        dateString = new Date(date.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        break;
+      case 'tomorrow':
+        dateString = new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        break;
+      case 'today':
+      default:
+        dateString = date.toISOString().split('T')[0];
+        break;
+    }
 
     const seedString = `${options.sign}|${dateString}|${options.cringe}`;
 

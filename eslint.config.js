@@ -1,10 +1,10 @@
-const js = require('@eslint/js');
-const tsPlugin = require('@typescript-eslint/eslint-plugin');
-const tsParser = require('@typescript-eslint/parser');
-const reactPlugin = require('eslint-plugin-react');
-const reactHooksPlugin = require('eslint-plugin-react-hooks');
-const importPlugin = require('eslint-plugin-import');
-const prettierConfig = require('eslint-config-prettier');
+const js = import('@eslint/js');
+const tsPlugin = import('@typescript-eslint/eslint-plugin');
+const tsParser = import('@typescript-eslint/parser');
+const reactPlugin = import('eslint-plugin-react');
+const reactHooksPlugin = import('eslint-plugin-react-hooks');
+const importPlugin = import('eslint-plugin-import');
+const prettierConfig = import('eslint-config-prettier');
 
 module.exports = [
   js.configs.recommended,

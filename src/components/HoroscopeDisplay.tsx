@@ -4,7 +4,6 @@ import { getOfficial } from '../services/aztroApi';
 import { generateRoast, getCringeMapping } from '../services/roastGenerator';
 import { composeResult, getModeDescription } from '../services/horoscopeComposer';
 import { generateDeterministicSeed } from '../utils/prng';
-import CringeSlider from './CringeSlider';
 import type { ZodiacSign, Day, Cringe, Mode, HoroscopeResult } from '../types';
 
 interface HoroscopeDisplayProps {

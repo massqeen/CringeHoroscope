@@ -1,14 +1,33 @@
 import { ReactNode, useState } from 'react';
 import { useHoroscope } from '../hooks/useHoroscope';
-import type { ZodiacSign, Day } from '../types';
+import { generateRoast } from '../services/roastGenerator';
+import { generateDeterministicSeed } from '../utils/prng';
+import type { ZodiacSign, Day, Cringe } from '../types';
 
 const HoroscopeTest = (): ReactNode => {
   const [selectedSign, setSelectedSign] = useState<ZodiacSign>('aries');
   const [selectedDay, setSelectedDay] = useState<Day>('today');
+  const [selectedCringe, setSelectedCringe] = useState<Cringe>(1);
   const { horoscope, loading, error, fetchHoroscope } = useHoroscope();
+  const [roastResult, setRoastResult] = useState<string | null>(null);
 
   const handleFetchHoroscope = (): void => {
     fetchHoroscope(selectedSign, selectedDay);
+  };
+
+  const handleGenerateRoast = (): void => {
+    const today = new Date();
+    const dateString = today.toISOString().slice(0, 10); // YYYY-MM-DD
+    const seed = generateDeterministicSeed(selectedSign, dateString, selectedCringe);
+    
+    const roast = generateRoast({
+      sign: selectedSign,
+      day: selectedDay,
+      cringe: selectedCringe,
+      seed
+    });
+    
+    setRoastResult(roast.text);
   };
 
   const zodiacSigns: ZodiacSign[] = [
@@ -50,6 +69,21 @@ const HoroscopeTest = (): ReactNode => {
           </select>
         </div>
 
+        <div style={{ marginBottom: '10px' }}>
+          <label htmlFor="cringe-select">Cringe Level:</label>
+          <select 
+            id="cringe-select"
+            value={selectedCringe} 
+            onChange={(e) => setSelectedCringe(parseInt(e.target.value) as Cringe)}
+            style={{ marginLeft: '10px', padding: '5px' }}
+          >
+            <option value={0}>0 - Mild</option>
+            <option value={1}>1 - Ironic</option>
+            <option value={2}>2 - Sarcastic</option>
+            <option value={3}>3 - Cringe Hard</option>
+          </select>
+        </div>
+
         <button 
           onClick={handleFetchHoroscope} 
           disabled={loading}
@@ -59,10 +93,25 @@ const HoroscopeTest = (): ReactNode => {
             color: 'white',
             border: 'none',
             borderRadius: '5px',
-            cursor: loading ? 'not-allowed' : 'pointer'
+            cursor: loading ? 'not-allowed' : 'pointer',
+            marginRight: '10px'
           }}
         >
           {loading ? 'Loading...' : 'Test API'}
+        </button>
+
+        <button 
+          onClick={handleGenerateRoast}
+          style={{ 
+            padding: '10px 20px', 
+            backgroundColor: '#28a745',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Generate Roast
         </button>
       </div>
 
@@ -83,9 +132,10 @@ const HoroscopeTest = (): ReactNode => {
           padding: '20px', 
           backgroundColor: '#f8f9fa', 
           borderRadius: '5px',
-          border: '1px solid #dee2e6'
+          border: '1px solid #dee2e6',
+          marginBottom: '20px'
         }}>
-          <h3>API Response:</h3>
+          <h3>Official API Response:</h3>
           <p><strong>Text:</strong> {horoscope.text}</p>
           {horoscope.luckyColor && (
             <p><strong>Lucky Color:</strong> {horoscope.luckyColor}</p>
@@ -93,6 +143,19 @@ const HoroscopeTest = (): ReactNode => {
           {horoscope.luckyNumber && (
             <p><strong>Lucky Number:</strong> {horoscope.luckyNumber}</p>
           )}
+        </div>
+      )}
+
+      {roastResult && (
+        <div style={{ 
+          padding: '20px', 
+          backgroundColor: '#fff3cd', 
+          borderRadius: '5px',
+          border: '1px solid #ffeaa7',
+          marginBottom: '20px'
+        }}>
+          <h3>Roast Generator Result:</h3>
+          <p><strong>Cringe Level {selectedCringe}:</strong> {roastResult}</p>
         </div>
       )}
     </div>

@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { useHoroscope } from '../hooks/useHoroscope';
+import { getOfficial } from '../services/aztroApi';
 import { generateRoast, getCringeMapping } from '../services/roastGenerator';
 import { composeResult, getModeDescription } from '../services/horoscopeComposer';
 import { generateDeterministicSeed } from '../utils/prng';
@@ -14,6 +15,7 @@ const HoroscopeTest = (): ReactNode => {
   const { horoscope, loading, error, fetchHoroscope } = useHoroscope();
   const [roastResult, setRoastResult] = useState<string | null>(null);
   const [composedResult, setComposedResult] = useState<HoroscopeResult | null>(null);
+  const [lastApiCall, setLastApiCall] = useState<{ timestamp: string; mode: string } | null>(null);
 
   // Helper functions for cringe level display
   const getCringeLabel = (level: Cringe): string => {
@@ -63,6 +65,71 @@ const HoroscopeTest = (): ReactNode => {
     });
     
     setRoastResult(roast.text);
+  };
+
+  const handleGenerateResult = async (): Promise<void> => {
+    const today = new Date();
+    const dateString = today.toISOString().slice(0, 10);
+    const seed = generateDeterministicSeed(selectedSign, dateString, selectedCringe);
+    
+    try {
+      let officialData = horoscope;
+      
+      // For official or mix modes, we need official data
+      if ((selectedMode === 'official' || selectedMode === 'mix') && !officialData) {
+        console.log('🔍 Fetching official data for', selectedMode, 'mode...');
+        const timestamp = new Date().toLocaleTimeString();
+        setLastApiCall({ timestamp, mode: selectedMode });
+        
+        // Fetch official data directly
+        officialData = await getOfficial(selectedSign, selectedDay);
+        console.log('✅ Official data fetched:', officialData);
+      }
+      
+      // Generate roast
+      const roast = generateRoast({
+        sign: selectedSign,
+        day: selectedDay,
+        cringe: selectedCringe,
+        seed
+      });
+      
+      console.log('🔥 Roast generated:', roast.text);
+      
+      // Set roast result for display
+      setRoastResult(roast.text);
+      
+      // Compose final result based on mode
+      let result;
+      if (selectedMode === 'roast') {
+        result = composeResult({
+          mode: selectedMode,
+          official: { text: '', luckyColor: undefined, luckyNumber: undefined },
+          roast,
+          cringe: selectedCringe,
+          seed
+        });
+      } else {
+        if (!officialData) {
+          alert('Failed to fetch official horoscope data!');
+          return;
+        }
+        result = composeResult({
+          mode: selectedMode,
+          official: officialData,
+          roast,
+          cringe: selectedCringe,
+          seed
+        });
+      }
+      
+      console.log('🎯 Final result composed:', result);
+      setComposedResult(result);
+      
+    } catch (error) {
+      console.error('❌ Error generating result:', error);
+      alert('Error generating horoscope result: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    }
   };
 
   const handleComposeResult = (): void => {
@@ -154,6 +221,35 @@ const HoroscopeTest = (): ReactNode => {
           </select>
         </div>
 
+        <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
+            🎯 Selected Mode: {getModeDescription(selectedMode)}
+          </div>
+          <div style={{ fontSize: '12px', color: '#666' }}>
+            {selectedMode === 'official' && '• Will fetch fresh data from Aztro API'}
+            {selectedMode === 'roast' && '• Will generate roast content locally (no API call)'}
+            {selectedMode === 'mix' && '• Will fetch Aztro API data + generate roast, then mix them'}
+          </div>
+        </div>
+
+        <button 
+          onClick={handleGenerateResult}
+          disabled={loading}
+          style={{ 
+            padding: '15px 30px', 
+            backgroundColor: loading ? '#ccc' : '#dc3545',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            marginRight: '10px',
+            fontSize: '16px',
+            fontWeight: 'bold'
+          }}
+        >
+          {loading ? 'Generating...' : `🚀 Generate ${selectedMode === 'official' ? 'Official' : selectedMode === 'roast' ? 'Roast' : 'Mixed'} Result`}
+        </button>
+
         <button 
           onClick={handleFetchHoroscope} 
           disabled={loading}
@@ -164,41 +260,27 @@ const HoroscopeTest = (): ReactNode => {
             border: 'none',
             borderRadius: '5px',
             cursor: loading ? 'not-allowed' : 'pointer',
-            marginRight: '10px'
+            marginRight: '10px',
+            fontSize: '12px'
           }}
         >
-          {loading ? 'Loading...' : 'Fetch Official'}
-        </button>
-
-        <button 
-          onClick={handleGenerateRoast}
-          style={{ 
-            padding: '10px 20px', 
-            backgroundColor: '#28a745',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginRight: '10px'
-          }}
-        >
-          Generate Roast
-        </button>
-
-        <button 
-          onClick={handleComposeResult}
-          style={{ 
-            padding: '10px 20px', 
-            backgroundColor: '#dc3545',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          Compose Final
+          {loading ? 'Loading...' : '🔍 Fetch Official Only'}
         </button>
       </div>
+
+      {/* API Call Status */}
+      {lastApiCall && (
+        <div style={{ 
+          padding: '10px', 
+          backgroundColor: '#d4edda', 
+          color: '#155724', 
+          borderRadius: '5px',
+          marginBottom: '15px',
+          border: '1px solid #c3e6cb'
+        }}>
+          🌐 <strong>API Call Made:</strong> {lastApiCall.timestamp} for {lastApiCall.mode} mode
+        </div>
+      )}
 
       {error && (
         <div style={{ 

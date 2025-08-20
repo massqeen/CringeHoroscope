@@ -20,6 +20,7 @@ export function useHoroscope(): UseHoroscopeReturn {
     
     try {
       const data = await getOfficial(sign, day);
+      console.log('✅ Official data fetched:', data);
       setHoroscope(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch horoscope');

@@ -26,7 +26,7 @@ const HoroscopeDisplay = ({
   onGenerate,
   isLoading = false 
 }: HoroscopeDisplayProps): ReactNode => {
-  const { horoscope, loading, error, fetchHoroscope } = useHoroscope();
+  const { horoscope, loading, error, fetchHoroscope, clearHoroscope } = useHoroscope();
   const [roastResult, setRoastResult] = useState<string | null>(null);
   const [composedResult, setComposedResult] = useState<HoroscopeResult | null>(null);
   const [lastApiCall, setLastApiCall] = useState<{ timestamp: string; mode: string } | null>(null);
@@ -83,6 +83,16 @@ const HoroscopeDisplay = ({
       }
     }
   }, [horoscope, pendingGeneration, onGenerate]);
+
+  // useEffect to clear data when sign or day changes
+  useEffect(() => {
+    // Clear all results when sign or day changes to force fresh data fetch
+    setComposedResult(null);
+    setRoastResult(null);
+    setPendingGeneration(null);
+    setLastApiCall(null);
+    clearHoroscope(); // Clear horoscope data from the hook
+  }, [sign, day, clearHoroscope]);
 
   // Helper functions for cringe level display
   const getCringeLabel = (level: Cringe): string => {
@@ -194,324 +204,205 @@ const HoroscopeDisplay = ({
 
   return (
     <div className="horoscope-display">
-      {/* Mode Description */}
-      <div style={{ 
-        marginBottom: '15px', 
-        padding: '10px', 
-        backgroundColor: '#f8f9fa', 
-        borderRadius: '5px',
-        border: '1px solid #dee2e6'
-      }}>
-        <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-          🎯 Current Settings: {getModeDescription(mode)}
-        </div>
-        <div style={{ fontSize: '12px', color: '#666' }}>
-          <strong>Sign:</strong> {sign.charAt(0).toUpperCase() + sign.slice(1)} • 
-          <strong> Day:</strong> {day} • 
-          <strong> Cringe:</strong> {cringe} ({getCringeLabel(cringe)}) • 
-          <strong> Mode:</strong> {deterministic ? 'Deterministic' : 'Random'}
-        </div>
-        <div style={{ fontSize: '11px', color: '#888', marginTop: '4px' }}>
-          {mode === 'official' && '• Will fetch fresh data from Aztro API'}
-          {mode === 'roast' && '• Will generate roast content locally (no API call)'}
-          {mode === 'mix' && '• Will fetch Aztro API data + generate roast, then mix them'}
-        </div>
-      </div>
-
       {/* Generate Button */}
-      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+      <div style={{ marginBottom: '30px', textAlign: 'center' }}>
         <button 
           onClick={handleGenerateResult}
           disabled={loading || isLoading}
           className="button button-primary w-full text-lg py-4"
           style={{ 
-            padding: '15px 30px', 
-            fontSize: '18px',
+            padding: '20px 40px', 
+            fontSize: '20px',
             fontWeight: 'bold',
-            minWidth: '200px'
+            minWidth: '280px',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            border: 'none',
+            borderRadius: '12px',
+            color: 'white',
+            cursor: loading || isLoading ? 'not-allowed' : 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
           }}
         >
           {(loading || isLoading) ? (
             <>
               <span className="loading"></span>
-              Consulting the sarcastic stars...
+              Consulting the cosmic forces...
             </>
           ) : (
             <>
-              <span className="text-xl">✨</span>
-              Generate My Cosmic Roast
-              <span className="text-xl">🔥</span>
+              <span style={{ fontSize: '24px' }}>✨</span>
+              {' '}Generate My Cosmic Roast{' '}
+              <span style={{ fontSize: '24px' }}>🔥</span>
             </>
           )}
         </button>
       </div>
 
-      {/* API Call Status */}
-      {lastApiCall && (
-        <div style={{ 
-          padding: '10px', 
-          backgroundColor: '#d4edda', 
-          color: '#155724', 
-          borderRadius: '5px',
-          marginBottom: '15px',
-          border: '1px solid #c3e6cb'
-        }}>
-          🌐 <strong>API Call Made:</strong> {lastApiCall.timestamp} for {lastApiCall.mode} mode
-        </div>
-      )}
-
       {/* Error Display */}
       {error && (
         <div style={{ 
-          padding: '10px', 
-          backgroundColor: '#f8d7da', 
-          color: '#721c24', 
-          borderRadius: '5px',
-          marginBottom: '20px',
-          border: '1px solid #f5c6cb'
-        }}>
-          <strong>❌ Error:</strong> {error}
-        </div>
-      )}
-
-      {/* Official API Response */}
-      {horoscope && (
-        <div style={{ 
           padding: '20px', 
-          backgroundColor: '#f8f9fa', 
-          borderRadius: '8px',
-          border: '1px solid #dee2e6',
-          marginBottom: '20px'
+          backgroundColor: '#fff5f5', 
+          color: '#e53e3e', 
+          borderRadius: '12px',
+          marginBottom: '30px',
+          border: '1px solid #fed7d7',
+          textAlign: 'center',
+          fontSize: '16px'
         }}>
-          <h3 style={{ margin: '0 0 15px 0', color: '#495057' }}>
-            📡 Official API Response
-          </h3>
-          <div style={{ 
-            backgroundColor: 'white',
-            padding: '15px',
-            borderRadius: '5px',
-            border: '1px solid #ddd',
-            marginBottom: '10px'
-          }}>
-            <p style={{ margin: 0, lineHeight: '1.5' }}>
-              <strong>Text:</strong> {horoscope.text}
-            </p>
-          </div>
-          <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-            {horoscope.luckyColor && (
-              <div style={{ fontSize: '14px' }}>
-                <strong>Lucky Color:</strong> 
-                <span style={{ 
-                  marginLeft: '8px',
-                  padding: '4px 12px',
-                  backgroundColor: horoscope.luckyColor,
-                  borderRadius: '12px',
-                  color: 'white',
-                  fontSize: '12px',
-                  fontWeight: 'bold'
-                }}>
-                  {horoscope.luckyColor}
-                </span>
-              </div>
-            )}
-            {horoscope.luckyNumber && (
-              <div style={{ fontSize: '14px' }}>
-                <strong>Lucky Number:</strong> 
-                <span style={{ 
-                  marginLeft: '8px',
-                  padding: '4px 12px',
-                  backgroundColor: '#007bff',
-                  borderRadius: '12px',
-                  color: 'white',
-                  fontSize: '12px',
-                  fontWeight: 'bold'
-                }}>
-                  {horoscope.luckyNumber}
-                </span>
-              </div>
-            )}
-          </div>
+          <strong>❌ Oops!</strong> {error}
         </div>
       )}
 
-      {/* Roast Generator Result */}
-      {roastResult && (
-        <div style={{ 
-          padding: '20px', 
-          backgroundColor: '#fff3cd', 
-          borderRadius: '8px',
-          border: '1px solid #ffeaa7',
-          marginBottom: '20px'
-        }}>
-          <h3 style={{ margin: '0 0 15px 0', color: '#856404' }}>
-            🔥 Roast Generator Result
-          </h3>
-          
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            marginBottom: '15px',
-            gap: '10px'
-          }}>
-            <span style={{ fontWeight: 'bold' }}>Cringe Level {cringe}:</span>
-            <span style={{ 
-              padding: '4px 12px',
-              backgroundColor: getCringeColor(cringe),
-              color: 'white',
-              borderRadius: '12px',
-              fontSize: '12px',
-              fontWeight: 'bold'
-            }}>
-              {getCringeLabel(cringe)} {getCringeEmoji(cringe)}
-            </span>
-          </div>
-          
-          {/* Content Pool & Transforms Info */}
-          <div style={{ 
-            marginBottom: '15px',
-            padding: '10px',
-            backgroundColor: `${getCringeColor(cringe)}15`,
-            borderRadius: '5px',
-            border: `1px solid ${getCringeColor(cringe)}30`
-          }}>
-            <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>
-              📊 Content Pool & Transforms for Level {cringe}:
-            </div>
-            {(() => {
-              const mapping = getCringeMapping(cringe);
-              return (
-                <div>
-                  <div style={{ fontSize: '11px', color: '#666', marginBottom: '6px' }}>
-                    <span>Moods: {mapping.availableOptions.moods.length}</span> • 
-                    <span> Work: {mapping.availableOptions.workSituations.length}</span> • 
-                    <span> Love: {mapping.availableOptions.loveSituations.length}</span> • 
-                    <span> Tips: {mapping.availableOptions.tips.length}</span> • 
-                    <span> Emojis: {mapping.availableOptions.emojis.length}</span>
-                    {mapping.availableOptions.punchlines && (
-                      <span> • Punchlines: {mapping.availableOptions.punchlines.length}</span>
-                    )}
-                  </div>
-                  <div style={{ fontSize: '10px', color: '#888', fontStyle: 'italic' }}>
-                    Transforms: {mapping.transformFeatures.slice(0, 2).join(' • ')}
-                  </div>
-                </div>
-              );
-            })()}
-          </div>
-
-          <div style={{ 
-            backgroundColor: 'white',
-            padding: '15px',
-            borderRadius: '5px',
-            border: '1px solid #ddd'
-          }}>
-            <p style={{ margin: 0, lineHeight: '1.5' }}>{roastResult}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Final Composed Result */}
+      {/* Final Composed Result - Production Style */}
       {composedResult && (
         <div style={{ 
-          padding: '20px', 
-          backgroundColor: '#d1ecf1', 
-          borderRadius: '8px',
-          border: '1px solid #bee5eb',
+          padding: '0',
           marginBottom: '20px'
         }}>
-          <h3 style={{ margin: '0 0 15px 0', color: '#0c5460' }}>
-            ✨ Final Horoscope Result
-          </h3>
-          
+          {/* Main horoscope content */}
           <div style={{ 
-            display: 'flex', 
-            flexWrap: 'wrap',
-            gap: '15px',
-            marginBottom: '15px'
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            padding: '30px',
+            borderRadius: '16px',
+            marginBottom: '20px',
+            boxShadow: '0 8px 32px rgba(102, 126, 234, 0.3)',
+            position: 'relative',
+            overflow: 'hidden'
           }}>
-            <div style={{ fontSize: '14px' }}>
-              <strong>Mode:</strong> {getModeDescription(mode)}
-            </div>
-            <div style={{ fontSize: '14px' }}>
-              <strong>Source:</strong> {composedResult.source}
-            </div>
+            {/* Decorative background elements */}
+            <div style={{
+              position: 'absolute',
+              top: '-50px',
+              right: '-50px',
+              width: '100px',
+              height: '100px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '50%',
+              pointerEvents: 'none'
+            }}></div>
+            <div style={{
+              position: 'absolute',
+              bottom: '-30px',
+              left: '-30px',
+              width: '60px',
+              height: '60px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '50%',
+              pointerEvents: 'none'
+            }}></div>
+            
             <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '5px'
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              padding: '25px',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              backdropFilter: 'blur(10px)',
+              position: 'relative',
+              zIndex: 1
             }}>
-              <strong>Cringe:</strong>
-              <span style={{ 
-                padding: '4px 12px',
-                backgroundColor: getCringeColor(cringe),
-                color: 'white',
-                borderRadius: '12px',
-                fontSize: '12px',
-                fontWeight: 'bold'
+              <p style={{ 
+                margin: 0, 
+                fontSize: '20px', 
+                lineHeight: '1.7',
+                color: '#2d3748',
+                textAlign: 'center',
+                fontWeight: '500'
               }}>
-                {cringe} - {getCringeLabel(cringe)} {getCringeEmoji(cringe)}
-              </span>
+                {composedResult.text}
+              </p>
             </div>
           </div>
           
-          <div style={{ 
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            margin: '10px 0',
-            border: '1px solid #ddd',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-          }}>
-            <p style={{ 
-              margin: 0, 
-              fontSize: '18px', 
-              lineHeight: '1.6',
-              color: '#2c3e50'
-            }}>
-              {composedResult.text}
-            </p>
-          </div>
-          
+          {/* Lucky elements in a beautiful card */}
           {(composedResult.luckyColor || composedResult.luckyNumber) && (
             <div style={{ 
-              backgroundColor: '#f8f9fa',
-              padding: '15px',
-              borderRadius: '8px',
-              border: '1px solid #dee2e6'
+              background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+              padding: '25px',
+              borderRadius: '16px',
+              boxShadow: '0 8px 32px rgba(240, 147, 251, 0.3)',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
-              <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                {composedResult.luckyColor && (
-                  <div style={{ fontSize: '14px' }}>
-                    <strong>🎨 Lucky Color:</strong> 
-                    <span style={{ 
-                      marginLeft: '8px',
-                      padding: '4px 12px',
-                      backgroundColor: composedResult.luckyColor,
-                      borderRadius: '12px',
-                      color: 'white',
-                      fontSize: '12px',
-                      fontWeight: 'bold'
+              {/* Decorative elements */}
+              <div style={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                fontSize: '40px',
+                opacity: 0.3
+              }}>🌟</div>
+              
+              <div style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                padding: '20px',
+                borderRadius: '12px',
+                backdropFilter: 'blur(10px)'
+              }}>
+                <h4 style={{ 
+                  margin: '0 0 15px 0', 
+                  color: '#2d3748',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                }}>
+                  ✨ Your Lucky Elements ✨
+                </h4>
+                <div style={{ 
+                  display: 'flex', 
+                  gap: '20px', 
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  {composedResult.luckyColor && (
+                    <div style={{ 
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      fontSize: '16px',
+                      fontWeight: '600'
                     }}>
-                      {composedResult.luckyColor}
-                    </span>
-                  </div>
-                )}
-                {composedResult.luckyNumber && (
-                  <div style={{ fontSize: '14px' }}>
-                    <strong>🔢 Lucky Number:</strong> 
-                    <span style={{ 
-                      marginLeft: '8px',
-                      padding: '4px 12px',
-                      backgroundColor: '#007bff',
-                      borderRadius: '12px',
-                      color: 'white',
-                      fontSize: '12px',
-                      fontWeight: 'bold'
+                      <span>🎨 Lucky Color:</span>
+                      <span style={{ 
+                        padding: '8px 16px',
+                        backgroundColor: composedResult.luckyColor,
+                        borderRadius: '20px',
+                        color: 'white',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                      }}>
+                        {composedResult.luckyColor}
+                      </span>
+                    </div>
+                  )}
+                  {composedResult.luckyNumber && (
+                    <div style={{ 
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      fontSize: '16px',
+                      fontWeight: '600'
                     }}>
-                      {composedResult.luckyNumber}
-                    </span>
-                  </div>
-                )}
+                      <span>🔢 Lucky Number:</span>
+                      <span style={{ 
+                        padding: '8px 16px',
+                        background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                        borderRadius: '20px',
+                        color: 'white',
+                        fontSize: '14px',
+                        fontWeight: 'bold',
+                        textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                      }}>
+                        {composedResult.luckyNumber}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}

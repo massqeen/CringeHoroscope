@@ -31,7 +31,7 @@ export interface HoroscopeResult {
 export interface RawHoroscopeData {
   description: string;
   color?: string;
-  lucky_Number?: string;
+  lucky_number?: number;
 }
 
 export interface HoroscopeResponse extends Array<RawHoroscopeData> {}

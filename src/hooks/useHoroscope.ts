@@ -7,6 +7,7 @@ interface UseHoroscopeReturn {
   loading: boolean;
   error: string | null;
   fetchHoroscope: (sign: ZodiacSign, day: Day) => Promise<void>;
+  clearHoroscope: () => void;
 }
 
 /**
@@ -54,7 +55,7 @@ export function useHoroscope(): UseHoroscopeReturn {
       const officialHoroscope: OfficialHoroscope = {
         text: item.description,
         luckyColor: item.color,
-        luckyNumber: item.lucky_Number ? parseInt(item.lucky_Number, 10) : 0,
+        luckyNumber: item?.lucky_number ?? 0,
       };
       setHoroscope(officialHoroscope);
     } catch (err) {
@@ -65,11 +66,17 @@ export function useHoroscope(): UseHoroscopeReturn {
     }
   }, []);
 
+  const clearHoroscope = useCallback(() => {
+    setHoroscope(null);
+    setError(null);
+  }, []);
+
   return {
     horoscope,
     loading,
     error,
     fetchHoroscope,
+    clearHoroscope,
   };
 }
 

@@ -1,8 +1,10 @@
 {
   "name": "cringe-horoscope",
   "version": "1.0.0",
+  "description": "A sarcastic horoscope generator with customizable cringe levels",
   "type": "module",
   "devDependencies": {
+    "@eslint/js": "^9.33.0",
     "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",

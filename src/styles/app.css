@@ -529,6 +529,10 @@ span[role="button"]:focus-visible {
   animation: spin 1s ease-in-out infinite;
 }
 
+.lucky-title {
+  color: black;
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }

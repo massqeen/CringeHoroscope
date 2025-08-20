@@ -364,7 +364,7 @@ const HoroscopeDisplay = ({
                       fontSize: '16px',
                       fontWeight: '600'
                     }}>
-                      <span>🎨 Lucky Color:</span>
+                      <span className="lucky-title">🎨 Lucky Color:</span>
                       <span style={{ 
                         padding: '8px 16px',
                         backgroundColor: composedResult.luckyColor,
@@ -387,7 +387,7 @@ const HoroscopeDisplay = ({
                       fontSize: '16px',
                       fontWeight: '600'
                     }}>
-                      <span>🔢 Lucky Number:</span>
+                      <span className="lucky-title">🔢 Lucky Number:</span>
                       <span style={{ 
                         padding: '8px 16px',
                         background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',

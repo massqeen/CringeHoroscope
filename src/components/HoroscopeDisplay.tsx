@@ -125,6 +125,121 @@ const HoroscopeDisplay = ({
     }
   };
 
+  // Function to determine if a color is light or dark
+  const isLightColor = (color: string): boolean => {
+    // Handle named colors
+    const namedColors: Record<string, string> = {
+      'white': '#ffffff',
+      'black': '#000000',
+      'red': '#ff0000',
+      'green': '#008000',
+      'blue': '#0000ff',
+      'yellow': '#ffff00',
+      'cyan': '#00ffff',
+      'magenta': '#ff00ff',
+      'silver': '#c0c0c0',
+      'gray': '#808080',
+      'grey': '#808080',
+      'maroon': '#800000',
+      'olive': '#808000',
+      'lime': '#00ff00',
+      'aqua': '#00ffff',
+      'teal': '#008080',
+      'navy': '#000080',
+      'fuchsia': '#ff00ff',
+      'purple': '#800080',
+      'orange': '#ffa500',
+      'pink': '#ffc0cb',
+      // Additional API colors
+      'bronze': '#cd7f32',
+      'slate-gray': '#708090',
+      'slate gray': '#708090',
+      'slategray': '#708090',
+      'lilac': '#c8a2c8',
+      'obsidian': '#0f1419',
+      'lavender': '#e6e6fa',
+      'gold': '#ffd700'
+    };
+
+    let hex = color.toLowerCase();
+    
+    // Convert named color to hex
+    if (namedColors[hex]) {
+      hex = namedColors[hex];
+    }
+    
+    // Remove # if present
+    hex = hex.replace('#', '');
+    
+    // Convert 3-digit hex to 6-digit
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    
+    // If not a valid hex, assume it's dark
+    if (!/^[0-9a-f]{6}$/i.test(hex)) {
+      return false;
+    }
+    
+    // Calculate luminance
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Calculate relative luminance using WCAG formula
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Return true if light (luminance > 0.5)
+    return luminance > 0.5;
+  };
+
+  // Function to get appropriate text color for background
+  const getTextColor = (backgroundColor: string): string => {
+    return isLightColor(backgroundColor) ? '#000000' : '#ffffff';
+  };
+
+  // Function to convert color names to valid CSS colors
+  const getCssColor = (color: string): string => {
+    // Handle named colors - return hex values for reliable CSS display
+    const namedColors: Record<string, string> = {
+      'white': '#ffffff',
+      'black': '#000000',
+      'red': '#ff0000',
+      'green': '#008000',
+      'blue': '#0000ff',
+      'yellow': '#ffff00',
+      'cyan': '#00ffff',
+      'magenta': '#ff00ff',
+      'silver': '#c0c0c0',
+      'gray': '#808080',
+      'grey': '#808080',
+      'maroon': '#800000',
+      'olive': '#808000',
+      'lime': '#00ff00',
+      'aqua': '#00ffff',
+      'teal': '#008080',
+      'navy': '#000080',
+      'fuchsia': '#ff00ff',
+      'purple': '#800080',
+      'orange': '#ffa500',
+      'pink': '#ffc0cb',
+      // Additional API colors
+      'bronze': '#cd7f32',
+      'slate-gray': '#708090',
+      'slate gray': '#708090',
+      'slategray': '#708090',
+      'lilac': '#c8a2c8',
+      'obsidian': '#0f1419',
+      'lavender': '#e6e6fa',
+      'gold': '#ffd700'
+    };
+
+    const lowerColor = color.toLowerCase();
+    
+    // Return hex value if we have it, otherwise return the original color
+    return namedColors[lowerColor] || color;
+  };
+
   const handleGenerateResult = async (): Promise<void> => {
     const today = new Date();
     const dateString = today.toISOString().slice(0, 10);
@@ -367,13 +482,18 @@ const HoroscopeDisplay = ({
                       <span className="lucky-title">🎨 Lucky Color:</span>
                       <span style={{ 
                         padding: '8px 16px',
-                        backgroundColor: composedResult.luckyColor,
+                        backgroundColor: getCssColor(composedResult.luckyColor),
                         borderRadius: '20px',
-                        color: 'white',
+                        color: getTextColor(composedResult.luckyColor),
                         fontSize: '14px',
                         fontWeight: 'bold',
-                        textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                        textShadow: isLightColor(composedResult.luckyColor) 
+                          ? '0 1px 2px rgba(255,255,255,0.3)' 
+                          : '0 1px 2px rgba(0,0,0,0.3)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                        border: isLightColor(composedResult.luckyColor) 
+                          ? '1px solid rgba(0,0,0,0.1)' 
+                          : 'none'
                       }}>
                         {composedResult.luckyColor}
                       </span>

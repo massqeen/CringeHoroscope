@@ -9,7 +9,7 @@ interface LuckyElementsProps {
 
 const LuckyElements = ({ luckyColor, luckyNumber }: LuckyElementsProps): ReactNode => {
   // Early return if no lucky elements to display
-  if (!luckyColor && !luckyNumber) {
+  if (!luckyColor && luckyNumber === undefined) {
     return null;
   }
 
@@ -40,7 +40,7 @@ const LuckyElements = ({ luckyColor, luckyNumber }: LuckyElementsProps): ReactNo
               </span>
             </div>
           )}
-          {luckyNumber && (
+          {luckyNumber !== undefined && (
             <div className={styles.luckyElementItem}>
               <span className={styles.luckyTitle}>🔢 Lucky Number:</span>
               <span

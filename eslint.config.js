@@ -1,12 +1,12 @@
-const js = import('@eslint/js');
-const tsPlugin = import('@typescript-eslint/eslint-plugin');
-const tsParser = import('@typescript-eslint/parser');
-const reactPlugin = import('eslint-plugin-react');
-const reactHooksPlugin = import('eslint-plugin-react-hooks');
-const importPlugin = import('eslint-plugin-import');
-const prettierConfig = import('eslint-config-prettier');
+import js from '@eslint/js';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import importPlugin from 'eslint-plugin-import';
+import prettierConfig from 'eslint-config-prettier';
 
-module.exports = [
+export default [
   js.configs.recommended,
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
@@ -21,6 +21,19 @@ module.exports = [
         window: 'readonly',
         document: 'readonly',
         console: 'readonly',
+        localStorage: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        alert: 'readonly',
+        crypto: 'readonly',
+        React: 'readonly',
+        HTMLElement: 'readonly',
+        HTMLDivElement: 'readonly',
+        HTMLInputElement: 'readonly',
+        HTMLSelectElement: 'readonly',
+        KeyboardEvent: 'readonly',
+        MouseEvent: 'readonly',
+        Node: 'readonly',
       },
     },
     plugins: {
@@ -36,6 +49,7 @@ module.exports = [
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       '@typescript-eslint/no-unused-vars': ['warn'],
+      'no-unused-vars': ['warn'],
       'import/order': [
         'warn',
         {
@@ -43,6 +57,9 @@ module.exports = [
           'newlines-between': 'always',
         },
       ],
+      'no-redeclare': 'warn',
+      'no-case-declarations': 'warn',
+      'no-misleading-character-class': 'warn',
     },
   },
   {
@@ -52,6 +69,9 @@ module.exports = [
         describe: 'readonly',
         it: 'readonly',
         expect: 'readonly',
+        vi: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
       },
     },
   },

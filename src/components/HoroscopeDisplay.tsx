@@ -1,13 +1,15 @@
 import { ReactNode, useState, useEffect } from 'react';
+
 import { useHoroscope } from '../hooks/useHoroscope';
 import { generateRoast } from '../services/roastGenerator';
 import { composeResult } from '../services/horoscopeComposer';
 import { generateDeterministicSeed } from '../utils/prng';
+import type { ZodiacSign, Day, Cringe, Mode, HoroscopeResult } from '../types';
+
 import GenerateButton from './GenerateButton';
 import LuckyElements from './LuckyElements';
 import ExportButton from './ExportButton';
 import styles from './HoroscopeDisplay.module.css';
-import type { ZodiacSign, Day, Cringe, Mode, HoroscopeResult } from '../types';
 
 interface HoroscopeDisplayProps {
   sign: ZodiacSign;

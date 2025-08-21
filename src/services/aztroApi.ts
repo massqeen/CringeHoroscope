@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import type { ZodiacSign, Day, HoroscopeResponse } from '../types';
 
 // Aztro API endpoint

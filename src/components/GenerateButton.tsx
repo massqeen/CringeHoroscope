@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 import styles from './GenerateButton.module.css';
 
 interface GenerateButtonProps {

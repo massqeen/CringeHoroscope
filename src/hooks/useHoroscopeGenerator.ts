@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+
 import { ZodiacSign, Day, Mode, Cringe, Options, HoroscopeResult } from '../types';
 
 export function useHoroscopeGenerator() {
@@ -16,46 +17,51 @@ export function useHoroscopeGenerator() {
   }, []);
 
   // Generate deterministic seed based on sign, date, and cringe level
-  const generateDeterministicSeed = useCallback((options: Options): number => {
-    const date = new Date();
-    let dateString: string;
-    
-    switch (day) {
-      case 'yesterday':
-        dateString = new Date(date.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-        break;
-      case 'tomorrow':
-        dateString = new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-        break;
-      case 'today':
-      default:
-        dateString = date.toISOString().split('T')[0];
-        break;
-    }
+  const generateDeterministicSeed = useCallback(
+    (options: Options): number => {
+      const date = new Date();
+      let dateString: string;
 
-    const seedString = `${options.sign}|${dateString}|${options.cringe}`;
+      switch (day) {
+        case 'yesterday':
+          dateString = new Date(date.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+          break;
+        case 'tomorrow':
+          dateString = new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+          break;
+        case 'today':
+        default:
+          dateString = date.toISOString().split('T')[0];
+          break;
+      }
 
-    // Simple hash function to convert string to number
-    let hash = 0;
-    for (let i = 0; i < seedString.length; i++) {
-      const char = seedString.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
-    }
+      const seedString = `${options.sign}|${dateString}|${options.cringe}`;
 
-    return Math.abs(hash);
-  }, [day]);
+      // Simple hash function to convert string to number
+      let hash = 0;
+      for (let i = 0; i < seedString.length; i++) {
+        const char = seedString.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash; // Convert to 32-bit integer
+      }
+
+      return Math.abs(hash);
+    },
+    [day],
+  );
 
   // Mock function for getting official horoscope (placeholder)
   const getOfficialHoroscope = useCallback(async (sign: string, day: Day) => {
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     // Mock response - in real implementation this would call Aztro API
+    // Using day parameter to vary the response
+    const dayModifier = day === 'today' ? 'today' : day === 'tomorrow' ? 'tomorrow' : 'yesterday';
     return {
-      text: `The stars align in your favor today, ${sign}. Expect positive energy and new opportunities.`,
+      text: `The stars align in your favor ${dayModifier}, ${sign}. Expect positive energy and new opportunities.`,
       luckyColor: '#10b981',
-      luckyNumber: Math.floor(Math.random() * 99) + 1
+      luckyNumber: Math.floor(Math.random() * 99) + 1,
     };
   }, []);
 
@@ -65,51 +71,64 @@ export function useHoroscopeGenerator() {
       0: `${options.sign}, today you'll feel as balanced as a yoga instructor on a tightrope. Spoiler: it's wobbly.`,
       1: `Oh ${options.sign}, the universe has plans for you today. Too bad it didn't consult your calendar first.`,
       2: `${options.sign}, today's forecast: 99% chance of overthinking with scattered periods of self-doubt.`,
-      3: `Listen up ${options.sign}, the cosmos called - they want their drama back. You're hogging all of it.`
+      3: `Listen up ${options.sign}, the cosmos called - they want their drama back. You're hogging all of it.`,
     };
 
     return {
-      text: roastLevels[options.cringe]
+      text: roastLevels[options.cringe],
     };
   }, []);
 
   // Compose final result based on mode
-  const composeResult = useCallback((mode: Mode, official: string, roast: string, cringe: Cringe, luckyColor?: string, luckyNumber?: number): HoroscopeResult => {
-    let text: string;
-    let source: "official" | "roast" | "mix";
+  const composeResult = useCallback(
+    (
+      mode: Mode,
+      official: string,
+      roast: string,
+      cringe: Cringe,
+      luckyColor?: string,
+      luckyNumber?: number,
+    ): HoroscopeResult => {
+      let text: string;
+      let source: 'official' | 'roast' | 'mix';
 
-    switch (mode) {
-      case 'official':
-        text = official;
-        source = 'official';
-        break;
-      case 'roast':
-        text = roast;
-        source = 'roast';
-        break;
-      case 'mix':
-        // For mix mode, combine official and roast
-        const officialSentences = official.split('.').filter(s => s.trim());
-        const roastSentences = roast.split('.').filter(s => s.trim());
-
-        text = `${officialSentences[0]?.trim()}. ${roastSentences[0]?.trim()}.`;
-
-        // Add punchline for higher cringe levels
-        if (cringe >= 2) {
-          text += ` The stars are laughing. 🌟`;
+      switch (mode) {
+        case 'official': {
+          text = official;
+          source = 'official';
+          break;
         }
+        case 'roast': {
+          text = roast;
+          source = 'roast';
+          break;
+        }
+        case 'mix': {
+          // For mix mode, combine official and roast
+          const officialSentences = official.split('.').filter((s) => s.trim());
+          const roastSentences = roast.split('.').filter((s) => s.trim());
 
-        source = 'mix';
-        break;
-    }
+          text = `${officialSentences[0]?.trim()}. ${roastSentences[0]?.trim()}.`;
 
-    return {
-      text,
-      source,
-      luckyColor,
-      luckyNumber
-    };
-  }, []);
+          // Add punchline for higher cringe levels
+          if (cringe >= 2) {
+            text += ` The stars are laughing. 🌟`;
+          }
+
+          source = 'mix';
+          break;
+        }
+      }
+
+      return {
+        text,
+        source,
+        luckyColor,
+        luckyNumber,
+      };
+    },
+    [],
+  );
 
   // Main generate function
   const generateHoroscope = useCallback(async () => {
@@ -121,13 +140,11 @@ export function useHoroscopeGenerator() {
         day,
         mode,
         cringe,
-        deterministic
+        deterministic,
       };
 
       // Generate or use seed
-      const seed = deterministic
-        ? generateDeterministicSeed(options)
-        : generateRandomSeed();
+      const seed = deterministic ? generateDeterministicSeed(options) : generateRandomSeed();
 
       options.seed = seed;
 
@@ -144,7 +161,7 @@ export function useHoroscopeGenerator() {
         roast.text,
         cringe,
         official.luckyColor,
-        official.luckyNumber
+        official.luckyNumber,
       );
 
       setResult(composedResult);
@@ -152,12 +169,23 @@ export function useHoroscopeGenerator() {
       console.error('Error generating horoscope:', error);
       setResult({
         text: 'The stars are having technical difficulties. Please try again later. 🛠️',
-        source: 'official'
+        source: 'official',
       });
     } finally {
       setIsLoading(false);
     }
-  }, [sign, day, mode, cringe, deterministic, generateDeterministicSeed, generateRandomSeed, getOfficialHoroscope, generateRoastHoroscope, composeResult]);
+  }, [
+    sign,
+    day,
+    mode,
+    cringe,
+    deterministic,
+    generateDeterministicSeed,
+    generateRandomSeed,
+    getOfficialHoroscope,
+    generateRoastHoroscope,
+    composeResult,
+  ]);
 
   // Refresh functions for partial updates
   const refreshEmoji = useCallback(() => {
@@ -166,10 +194,20 @@ export function useHoroscopeGenerator() {
     const emojis = ['✨', '🌟', '⭐', '🔮', '🌙', '☀️', '🎭', '🎪', '🎨', '💫'];
     const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
 
-    setResult(prev => prev ? {
-      ...prev,
-      text: prev.text.replace(/[✨🌟⭐🔮🌙☀️🎭🎪🎨💫]/g, randomEmoji)
-    } : null);
+    setResult((prev) => {
+      if (!prev) return null;
+
+      // Replace any existing emoji with new random emoji
+      let newText = prev.text;
+      emojis.forEach((emoji) => {
+        newText = newText.replace(new RegExp(emoji, 'g'), randomEmoji);
+      });
+
+      return {
+        ...prev,
+        text: newText,
+      };
+    });
   }, [result]);
 
   const refreshAdvice = useCallback(() => {
@@ -181,15 +219,19 @@ export function useHoroscopeGenerator() {
       'Embrace the chaos',
       'Question everything',
       'Dance like nobody is watching',
-      'Breathe and let go'
+      'Breathe and let go',
     ];
 
     const randomAdvice = advices[Math.floor(Math.random() * advices.length)];
 
-    setResult(prev => prev ? {
-      ...prev,
-      text: prev.text + ` Remember: ${randomAdvice}.`
-    } : null);
+    setResult((prev) =>
+      prev
+        ? {
+            ...prev,
+            text: prev.text + ` Remember: ${randomAdvice}.`,
+          }
+        : null,
+    );
   }, [result]);
 
   const refreshColor = useCallback(() => {
@@ -198,10 +240,14 @@ export function useHoroscopeGenerator() {
     const colors = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#06b6d4'];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-    setResult(prev => prev ? {
-      ...prev,
-      luckyColor: randomColor
-    } : null);
+    setResult((prev) =>
+      prev
+        ? {
+            ...prev,
+            luckyColor: randomColor,
+          }
+        : null,
+    );
   }, [result]);
 
   const exportImage = useCallback(() => {
@@ -230,6 +276,6 @@ export function useHoroscopeGenerator() {
     refreshEmoji,
     refreshAdvice,
     refreshColor,
-    exportImage
+    exportImage,
   };
 }

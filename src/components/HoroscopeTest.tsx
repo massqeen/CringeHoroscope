@@ -1,11 +1,13 @@
 import { ReactNode, useState } from 'react';
+
 import { useHoroscope } from '../hooks/useHoroscope';
 import { getOfficial } from '../services/aztroApi';
 import { generateRoast, getCringeMapping } from '../services/roastGenerator';
 import { composeResult, getModeDescription } from '../services/horoscopeComposer';
 import { generateDeterministicSeed } from '../utils/prng';
-import CringeSlider from './CringeSlider';
 import type { ZodiacSign, Day, Cringe, Mode, HoroscopeResult } from '../types';
+
+import CringeSlider from './CringeSlider';
 
 const HoroscopeTest = (): ReactNode => {
   const [selectedSign, setSelectedSign] = useState<ZodiacSign>('aries');
@@ -65,21 +67,6 @@ const HoroscopeTest = (): ReactNode => {
 
   const handleFetchHoroscope = (): void => {
     fetchHoroscope(selectedSign, selectedDay);
-  };
-
-  const handleGenerateRoast = (): void => {
-    const today = new Date();
-    const dateString = today.toISOString().slice(0, 10); // YYYY-MM-DD
-    const seed = generateDeterministicSeed(selectedSign, dateString, selectedCringe);
-
-    const roast = generateRoast({
-      sign: selectedSign,
-      day: selectedDay,
-      cringe: selectedCringe,
-      seed,
-    });
-
-    setRoastResult(roast.text);
   };
 
   const handleGenerateResult = async (): Promise<void> => {
@@ -153,36 +140,6 @@ const HoroscopeTest = (): ReactNode => {
           (error instanceof Error ? error.message : 'Unknown error'),
       );
     }
-  };
-
-  const handleComposeResult = (): void => {
-    if (!horoscope) {
-      alert('Please fetch official horoscope first!');
-      return;
-    }
-
-    const today = new Date();
-    const dateString = today.toISOString().slice(0, 10);
-    const seed = generateDeterministicSeed(selectedSign, dateString, selectedCringe);
-
-    // Generate roast
-    const roast = generateRoast({
-      sign: selectedSign,
-      day: selectedDay,
-      cringe: selectedCringe,
-      seed,
-    });
-
-    // Compose result
-    const result = composeResult({
-      mode: selectedMode,
-      official: horoscope,
-      roast,
-      cringe: selectedCringe,
-      seed,
-    });
-
-    setComposedResult(result);
   };
 
   const zodiacSigns: ZodiacSign[] = [

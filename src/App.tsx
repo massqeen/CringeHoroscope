@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import './styles/app.css';
 import HoroscopeControls from './components/HoroscopeControls';
 import HoroscopeDisplay from './components/HoroscopeDisplay';
@@ -17,7 +18,6 @@ function App() {
     mode,
     cringe,
     deterministic,
-    result,
     isLoading,
     setSign,
     setDay,
@@ -25,10 +25,6 @@ function App() {
     setCringe,
     setDeterministic,
     generateHoroscope,
-    refreshEmoji,
-    refreshAdvice,
-    refreshColor,
-    exportImage,
   } = useHoroscopeGenerator();
 
   const { isModalOpen, shouldShowWarning, handleCloseModal } = useCringeWarning();

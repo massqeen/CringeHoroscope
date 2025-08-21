@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+
 import type { Cringe } from '../types';
 
 const CRINGE_WARNING_SHOWN_KEY = 'cringe-warning-shown';

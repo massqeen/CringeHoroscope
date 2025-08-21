@@ -1,7 +1,9 @@
 import { ReactNode, useState } from 'react';
+
 import { getCringeMapping, generateCringePreview } from '../services/roastGenerator';
-import CringeSlider from './CringeSlider';
 import type { Cringe, ZodiacSign } from '../types';
+
+import CringeSlider from './CringeSlider';
 
 interface CringeMappingProps {
   selectedSign?: ZodiacSign;

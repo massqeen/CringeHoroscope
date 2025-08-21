@@ -334,6 +334,38 @@ interface ComposeResultOptions {
 }
 
 /**
+ * Generate funny formula for lucky number when cringe level is hard
+ */
+function generateCringeFormula(originalNumber: number | string | undefined, seed: number): string {
+  // If it's already a string (formula), return it as-is
+  if (typeof originalNumber === 'string') return originalNumber;
+  
+  // If no number provided, use a default
+  if (!originalNumber) return "π + 42";
+  
+  const rng = createSimpleRng(seed + 999);
+  const formulas = [
+    `${originalNumber} × ∞`,
+    `√(${originalNumber}²)`,
+    `${originalNumber} + 0`,
+    `${originalNumber} ÷ 1`,
+    `${originalNumber} - 0`,
+    `ln(e^${originalNumber})`,
+    `${originalNumber} mod ∞`,
+    `|${originalNumber}|`,
+    `${originalNumber}^1`,
+    `∞ - ∞ + ${originalNumber}`,
+    `${originalNumber} × 1.0`,
+    `${originalNumber} + π - π`,
+    `${originalNumber} × i ÷ i`,
+    `⌊${originalNumber}.0⌋`,
+    `⌈${originalNumber}.0⌉`
+  ];
+  
+  return formulas[Math.floor(rng() * formulas.length)];
+}
+
+/**
  * Composes final horoscope result based on mode
  * @param options - Composition options
  * @returns Final horoscope result
@@ -345,10 +377,16 @@ export function composeResult(options: ComposeResultOptions): HoroscopeResult {
     case 'official':
       // Apply cringe transforms to official text
       const transformedText = applyCringeTransforms(official.text, cringe, seed);
+      
+      // For cringe level 3, replace lucky number with funny formula
+      const processedLuckyNumber = cringe === 3 
+        ? generateCringeFormula(official.luckyNumber, seed)
+        : official.luckyNumber;
+      
       return {
         text: transformedText,
         luckyColor: official.luckyColor,
-        luckyNumber: official.luckyNumber,
+        luckyNumber: processedLuckyNumber,
         source: 'official'
       };
       
@@ -443,11 +481,16 @@ function composeMixedResult(
   const finalText = mixedSentences
     .filter(sentence => sentence.trim().length > 0)
     .join(' ');
+
+  // For cringe level 3, replace lucky number with funny formula
+  const processedLuckyNumber = cringe === 3 
+    ? generateCringeFormula(official.luckyNumber, seed)
+    : official.luckyNumber;
   
   return {
     text: finalText,
     luckyColor: official.luckyColor,
-    luckyNumber: official.luckyNumber,
+    luckyNumber: processedLuckyNumber,
     source: 'mix'
   };
 }

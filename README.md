@@ -140,6 +140,42 @@ npm run build
 npm run preview
 ```
 
+## 🚀 Deployment
+
+### GitHub Pages (Automatic)
+
+This project is configured for automatic deployment to GitHub Pages using GitHub Actions:
+
+1. **Push to main branch** - Deployment triggers automatically
+2. **Pull Request** - Builds are tested but not deployed
+3. **Live URL**: `https://your-username.github.io/CringeHoroscope/`
+
+#### Setup Instructions:
+
+1. **Fork or clone** this repository to your GitHub account
+2. **Enable GitHub Pages** in repository settings:
+   - Go to `Settings > Pages`
+   - Source: `GitHub Actions`
+3. **Push to main branch** - First deployment will start automatically
+4. **Check Actions tab** for deployment status
+
+#### Deployment Features:
+- ✅ **Automated testing** before deployment
+- ✅ **ESLint validation** for code quality
+- ✅ **Optimized builds** with code splitting
+- ✅ **Asset optimization** for faster loading
+- ✅ **Error handling** with detailed logs
+
+### Manual Deployment
+
+```bash
+# Build and deploy manually
+npm run build
+
+# The dist/ folder contains the production build
+# Upload contents to your hosting provider
+```
+
 ## 🎨 Development Features
 
 ### Development Mode Toggle

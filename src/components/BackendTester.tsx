@@ -8,8 +8,8 @@ const BackendTester = (): ReactNode => {
 
   return (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 tabIndex={0}>🔧 Backend Development & Testing</h2>
-      <p>API Testing & Cringe Level Mapping Visualization</p>
+      <h2 tabIndex={0} style={{ color: 'var(--text-primary)' }}>🔧 Backend Development & Testing</h2>
+      <p style={{ color: 'var(--text-primary)' }}>API Testing & Cringe Level Mapping Visualization</p>
       
       {/* Tab Navigation */}
       <div style={{ 

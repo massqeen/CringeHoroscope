@@ -129,8 +129,8 @@ export function DeterminismTester(): React.ReactElement {
       
       {/* Mode Selection */}
       <div style={{ marginBottom: '15px' }}>
-        <label style={{ fontWeight: 'bold', marginRight: '10px' }}>Mode:</label>
-        <label style={{ marginRight: '15px' }}>
+        <label style={{ fontWeight: 'bold', marginRight: '10px', color: '#000000' }}>Mode:</label>
+        <label style={{ marginRight: '15px', color: '#000000' }}>
           <input 
             type="radio" 
             value="deterministic" 
@@ -140,7 +140,7 @@ export function DeterminismTester(): React.ReactElement {
           />
           🔒 Deterministic (seed = sign|date|cringe)
         </label>
-        <label>
+        <label style={{ color: '#000000' }}>
           <input 
             type="radio" 
             value="random" 
@@ -164,7 +164,7 @@ export function DeterminismTester(): React.ReactElement {
         border: '1px solid #dee2e6'
       }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#000000' }}>
             Zodiac Sign:
           </label>
           <select 
@@ -181,7 +181,7 @@ export function DeterminismTester(): React.ReactElement {
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#000000' }}>
             Date (YYYY-MM-DD):
           </label>
           <input 
@@ -193,7 +193,7 @@ export function DeterminismTester(): React.ReactElement {
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#000000' }}>
             Cringe Level:
           </label>
           <select 
@@ -218,7 +218,8 @@ export function DeterminismTester(): React.ReactElement {
           border: '1px solid #b8daff',
           borderRadius: '4px',
           fontSize: '14px',
-          fontFamily: 'monospace'
+          fontFamily: 'monospace',
+          color: '#000000'
         }}>
           <strong>🔐 Deterministic Seed:</strong> {generateDeterministicSeed(selectedSign, selectedDate, selectedCringe)}
           <br />
@@ -293,7 +294,7 @@ export function DeterminismTester(): React.ReactElement {
       {/* Results Display */}
       {results.length > 0 && (
         <div>
-          <h4 style={{ margin: '0 0 10px 0' }}>📊 Test Results:</h4>
+          <h4 style={{ margin: '0 0 10px 0', color: '#000000' }}>📊 Test Results:</h4>
           <div style={{ 
             maxHeight: '400px', 
             overflowY: 'auto',
@@ -315,7 +316,7 @@ export function DeterminismTester(): React.ReactElement {
                   alignItems: 'center',
                   marginBottom: '8px'
                 }}>
-                  <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                  <div style={{ fontSize: '12px', color: '#000000' }}>
                     <strong>#{index + 1}</strong> | {result.timestamp} | 
                     <span style={{ 
                       color: result.mode === 'deterministic' ? '#28a745' : 
@@ -325,14 +326,14 @@ export function DeterminismTester(): React.ReactElement {
                       {result.mode.toUpperCase()}
                     </span>
                   </div>
-                  <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#495057' }}>
+                  <div style={{ fontSize: '11px', fontFamily: 'monospace', color: '#000000' }}>
                     Seed: {result.seed}
                   </div>
                 </div>
-                <div style={{ fontSize: '11px', color: '#6c757d', marginBottom: '5px' }}>
+                <div style={{ fontSize: '11px', color: '#000000', marginBottom: '5px' }}>
                   <strong>Source:</strong> {result.seedSource}
                 </div>
-                <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                <div style={{ fontSize: '14px', lineHeight: '1.4', color: '#000000' }}>
                   {result.result}
                 </div>
               </div>
@@ -349,7 +350,7 @@ export function DeterminismTester(): React.ReactElement {
         border: '1px solid #ffeaa7',
         borderRadius: '4px',
         fontSize: '12px',
-        color: '#856404'
+        color: '#000000'
       }}>
         💡 <strong>Testing Tips:</strong>
         <br />• Deterministic mode should produce identical results with same parameters

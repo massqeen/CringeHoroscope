@@ -158,17 +158,24 @@ const HoroscopeTest = (): ReactNode => {
   ];
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h2 tabIndex={0}>🔮 API Test Component</h2>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', color: 'var(--text-primary)' }}>
+      <h2 tabIndex={0} style={{ color: 'var(--text-primary)' }}>🔮 API Test Component</h2>
 
       <div style={{ marginBottom: '20px' }}>
         <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="zodiac-select">Zodiac Sign:</label>
+          <label htmlFor="zodiac-select" style={{ color: 'var(--text-primary)' }}>Zodiac Sign:</label>
           <select
             id="zodiac-select"
             value={selectedSign}
             onChange={(e) => setSelectedSign(e.target.value as ZodiacSign)}
-            style={{ marginLeft: '10px', padding: '5px' }}
+            style={{ 
+              marginLeft: '10px', 
+              padding: '5px',
+              background: 'var(--background)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)'
+            }}
           >
             {zodiacSigns.map((sign) => (
               <option key={sign} value={sign}>
@@ -179,12 +186,19 @@ const HoroscopeTest = (): ReactNode => {
         </div>
 
         <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="day-select">Day:</label>
+          <label htmlFor="day-select" style={{ color: 'var(--text-primary)' }}>Day:</label>
           <select
             id="day-select"
             value={selectedDay}
             onChange={(e) => setSelectedDay(e.target.value as Day)}
-            style={{ marginLeft: '10px', padding: '5px' }}
+            style={{ 
+              marginLeft: '10px', 
+              padding: '5px',
+              background: 'var(--background)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)'
+            }}
           >
             <option value="today">Today</option>
             <option value="tomorrow">Tomorrow</option>
@@ -194,12 +208,19 @@ const HoroscopeTest = (): ReactNode => {
         <CringeSlider value={selectedCringe} onChange={setSelectedCringe} disabled={loading} />
 
         <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="mode-select">Composition Mode:</label>
+          <label htmlFor="mode-select" style={{ color: 'var(--text-primary)' }}>Composition Mode:</label>
           <select
             id="mode-select"
             value={selectedMode}
             onChange={(e) => setSelectedMode(e.target.value as Mode)}
-            style={{ marginLeft: '10px', padding: '5px' }}
+            style={{ 
+              marginLeft: '10px', 
+              padding: '5px',
+              background: 'var(--background)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)'
+            }}
           >
             <option value="official">Official Only</option>
             <option value="roast">Roast Only</option>
@@ -211,14 +232,15 @@ const HoroscopeTest = (): ReactNode => {
           style={{
             marginBottom: '15px',
             padding: '10px',
-            backgroundColor: '#f8f9fa',
+            backgroundColor: 'var(--background-card)',
             borderRadius: '5px',
+            border: '1px solid var(--border)',
           }}
         >
-          <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: 'var(--text-primary)' }}>
             🎯 Selected Mode: {getModeDescription(selectedMode)}
           </div>
-          <div style={{ fontSize: '12px', color: '#666' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
             {selectedMode === 'official' && '• Will fetch fresh data from Aztro API'}
             {selectedMode === 'roast' && '• Will generate roast content locally (no API call)'}
             {selectedMode === 'mix' &&
@@ -231,7 +253,7 @@ const HoroscopeTest = (): ReactNode => {
           disabled={loading}
           style={{
             padding: '15px 30px',
-            backgroundColor: loading ? '#ccc' : '#dc3545',
+            backgroundColor: loading ? 'var(--border)' : 'var(--primary)',
             color: 'white',
             border: 'none',
             borderRadius: '8px',
@@ -251,8 +273,8 @@ const HoroscopeTest = (): ReactNode => {
           disabled={loading}
           style={{
             padding: '10px 20px',
-            backgroundColor: loading ? '#ccc' : '#007bff',
-            color: 'white',
+            backgroundColor: loading ? 'var(--border)' : 'var(--secondary)',
+            color: loading ? 'var(--text-secondary)' : 'var(--background)',
             border: 'none',
             borderRadius: '5px',
             cursor: loading ? 'not-allowed' : 'pointer',
@@ -269,11 +291,11 @@ const HoroscopeTest = (): ReactNode => {
         <div
           style={{
             padding: '10px',
-            backgroundColor: '#d4edda',
-            color: '#155724',
+            backgroundColor: 'var(--success)',
+            color: 'white',
             borderRadius: '5px',
             marginBottom: '15px',
-            border: '1px solid #c3e6cb',
+            border: '1px solid var(--border)',
           }}
         >
           🌐 <strong>API Call Made:</strong> {lastApiCall.timestamp} for {lastApiCall.mode} mode
@@ -284,8 +306,8 @@ const HoroscopeTest = (): ReactNode => {
         <div
           style={{
             padding: '10px',
-            backgroundColor: '#f8d7da',
-            color: '#721c24',
+            backgroundColor: 'var(--error)',
+            color: 'white',
             borderRadius: '5px',
             marginBottom: '20px',
           }}
@@ -298,23 +320,23 @@ const HoroscopeTest = (): ReactNode => {
         <div
           style={{
             padding: '20px',
-            backgroundColor: '#f8f9fa',
+            backgroundColor: 'var(--background-card)',
             borderRadius: '5px',
-            border: '1px solid #dee2e6',
+            border: '1px solid var(--border)',
             marginBottom: '20px',
           }}
         >
-          <h3>Official API Response:</h3>
-          <p>
+          <h3 style={{ color: 'var(--text-primary)' }}>Official API Response:</h3>
+          <p style={{ color: 'var(--text-primary)' }}>
             <strong>Text:</strong> {horoscope.text}
           </p>
           {horoscope.luckyColor && (
-            <p>
+            <p style={{ color: 'var(--text-primary)' }}>
               <strong>Lucky Color:</strong> {horoscope.luckyColor}
             </p>
           )}
           {horoscope.luckyNumber && (
-            <p>
+            <p style={{ color: 'var(--text-primary)' }}>
               <strong>Lucky Number:</strong> {horoscope.luckyNumber}
             </p>
           )}
@@ -325,13 +347,13 @@ const HoroscopeTest = (): ReactNode => {
         <div
           style={{
             padding: '20px',
-            backgroundColor: '#fff3cd',
+            backgroundColor: 'var(--background-card)',
             borderRadius: '5px',
-            border: '1px solid #ffeaa7',
+            border: '1px solid var(--border)',
             marginBottom: '20px',
           }}
         >
-          <h3>Roast Generator Result:</h3>
+          <h3 style={{ color: 'var(--text-primary)' }}>Roast Generator Result:</h3>
           <div
             style={{
               display: 'flex',
@@ -340,7 +362,7 @@ const HoroscopeTest = (): ReactNode => {
               gap: '10px',
             }}
           >
-            <span style={{ fontWeight: 'bold' }}>Cringe Level {selectedCringe}:</span>
+            <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>Cringe Level {selectedCringe}:</span>
             <span
               style={{
                 padding: '4px 8px',
@@ -360,19 +382,19 @@ const HoroscopeTest = (): ReactNode => {
             style={{
               marginBottom: '15px',
               padding: '10px',
-              backgroundColor: `${getCringeColor(selectedCringe)}15`,
+              backgroundColor: 'var(--background)',
               borderRadius: '5px',
               border: `1px solid ${getCringeColor(selectedCringe)}30`,
             }}
           >
-            <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>
+            <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', color: 'var(--text-primary)' }}>
               📊 Content Pool & Transforms for Level {selectedCringe}:
             </div>
             {(() => {
               const mapping = getCringeMapping(selectedCringe);
               return (
                 <div>
-                  <div style={{ fontSize: '11px', color: '#666', marginBottom: '6px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                     <span>Moods: {mapping.availableOptions.moods.length}</span> •
                     <span> Work: {mapping.availableOptions.workSituations.length}</span> •
                     <span> Love: {mapping.availableOptions.loveSituations.length}</span> •
@@ -382,7 +404,7 @@ const HoroscopeTest = (): ReactNode => {
                       <span> • Punchlines: {mapping.availableOptions.punchlines.length}</span>
                     )}
                   </div>
-                  <div style={{ fontSize: '10px', color: '#888', fontStyle: 'italic' }}>
+                  <div style={{ fontSize: '10px', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
                     Transforms: {mapping.transformFeatures.slice(0, 2).join(' • ')}
                   </div>
                 </div>
@@ -392,13 +414,13 @@ const HoroscopeTest = (): ReactNode => {
 
           <div
             style={{
-              backgroundColor: 'white',
+              backgroundColor: 'var(--background)',
               padding: '15px',
               borderRadius: '5px',
-              border: '1px solid #ddd',
+              border: '1px solid var(--border)',
             }}
           >
-            <p style={{ margin: 0 }}>{roastResult}</p>
+            <p style={{ margin: 0, color: 'var(--text-primary)' }}>{roastResult}</p>
           </div>
         </div>
       )}
@@ -407,13 +429,13 @@ const HoroscopeTest = (): ReactNode => {
         <div
           style={{
             padding: '20px',
-            backgroundColor: '#d1ecf1',
+            backgroundColor: 'var(--background-card)',
             borderRadius: '5px',
-            border: '1px solid #bee5eb',
+            border: '1px solid var(--border)',
             marginBottom: '20px',
           }}
         >
-          <h3>Final Composed Result:</h3>
+          <h3 style={{ color: 'var(--text-primary)' }}>Final Composed Result:</h3>
           <div
             style={{
               display: 'flex',
@@ -422,10 +444,10 @@ const HoroscopeTest = (): ReactNode => {
               marginBottom: '15px',
             }}
           >
-            <div>
+            <div style={{ color: 'var(--text-primary)' }}>
               <strong>Mode:</strong> {getModeDescription(selectedMode)}
             </div>
-            <div>
+            <div style={{ color: 'var(--text-primary)' }}>
               <strong>Source:</strong> {composedResult.source}
             </div>
             <div
@@ -435,7 +457,7 @@ const HoroscopeTest = (): ReactNode => {
                 gap: '5px',
               }}
             >
-              <strong>Cringe:</strong>
+              <strong style={{ color: 'var(--text-primary)' }}>Cringe:</strong>
               <span
                 style={{
                   padding: '4px 8px',
@@ -452,28 +474,28 @@ const HoroscopeTest = (): ReactNode => {
           </div>
           <div
             style={{
-              backgroundColor: 'white',
+              backgroundColor: 'var(--background)',
               padding: '15px',
               borderRadius: '5px',
               margin: '10px 0',
-              border: '1px solid #ddd',
+              border: '1px solid var(--border)',
             }}
           >
-            <p style={{ margin: 0, fontSize: '16px', lineHeight: '1.5' }}>
+            <p style={{ margin: 0, fontSize: '16px', lineHeight: '1.5', color: 'var(--text-primary)' }}>
               <strong>Text:</strong> {composedResult.text}
             </p>
           </div>
           {(composedResult.luckyColor || composedResult.luckyNumber) && (
             <div
               style={{
-                backgroundColor: '#f8f9fa',
+                backgroundColor: 'var(--background)',
                 padding: '10px',
                 borderRadius: '5px',
-                border: '1px solid #dee2e6',
+                border: '1px solid var(--border)',
               }}
             >
               {composedResult.luckyColor && (
-                <p style={{ margin: '0 0 5px 0' }}>
+                <p style={{ margin: '0 0 5px 0', color: 'var(--text-primary)' }}>
                   <strong>Lucky Color:</strong>
                   <span
                     style={{
@@ -490,13 +512,13 @@ const HoroscopeTest = (): ReactNode => {
                 </p>
               )}
               {composedResult.luckyNumber && (
-                <p style={{ margin: 0 }}>
+                <p style={{ margin: 0, color: 'var(--text-primary)' }}>
                   <strong>Lucky Number:</strong>
                   <span
                     style={{
                       marginLeft: '8px',
                       padding: '2px 8px',
-                      backgroundColor: '#007bff',
+                      backgroundColor: 'var(--primary)',
                       borderRadius: '12px',
                       color: 'white',
                       fontSize: '12px',

@@ -1,0 +1,241 @@
+/* Cringe Warning Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modalContent {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d1b3d 100%);
+  border-radius: 16px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 2px solid #ff6b6b;
+  animation: slideIn 0.3s ease-out;
+  outline: none;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff6b6b;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 32px;
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover,
+.closeButton:focus {
+  background-color: rgba(255, 107, 107, 0.2);
+  outline: 2px solid #ff6b6b;
+  outline-offset: 2px;
+}
+
+.modalBody {
+  padding: 24px;
+}
+
+.warningText {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.warningText p {
+  margin: 8px 0;
+  font-size: 18px;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.warningText p:first-child {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff6b6b;
+}
+
+.videoContainer {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  margin-bottom: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+}
+
+.videoEmbed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 12px;
+}
+
+/* Sound Control Styles */
+.soundControl {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.soundButton {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  margin-bottom: 8px;
+}
+
+.soundButton:hover,
+.soundButton:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+  outline: 2px solid #ff6b6b;
+  outline-offset: 2px;
+}
+
+.soundHint {
+  margin: 0;
+  font-size: 14px;
+  color: #ffffff;
+  opacity: 0.8;
+}
+
+.soundEnabled {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff6b6b;
+  text-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+  animation: pulse 2s infinite;
+}
+
+.modalFooter {
+  text-align: center;
+}
+
+.continueButton {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  min-width: 280px;
+}
+
+.continueButton:hover,
+.continueButton:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+  outline: 2px solid #ff6b6b;
+  outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .modalContent {
+    margin: 10px;
+    max-height: 95vh;
+  }
+
+  .modalTitle {
+    font-size: 20px;
+  }
+
+  .warningText p {
+    font-size: 16px;
+  }
+
+  .continueButton {
+    padding: 14px 24px;
+    font-size: 16px;
+    min-width: 240px;
+  }
+
+  .soundButton {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

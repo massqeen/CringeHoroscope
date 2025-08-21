@@ -2,7 +2,9 @@ import { useState } from 'react';
 import './styles/app.css';
 import HoroscopeControls from './components/HoroscopeControls';
 import HoroscopeDisplay from './components/HoroscopeDisplay';
+import CringeWarningModal from './components/CringeWarningModal';
 import { useHoroscopeGenerator } from './hooks/useHoroscopeGenerator';
+import { useCringeWarning } from './hooks/useCringeWarning';
 import { ApiTester } from './components/ApiTester';
 import { DeterminismTester } from './components/DeterminismTester';
 import BackendTester from './components/BackendTester';
@@ -29,30 +31,32 @@ function App() {
     exportImage,
   } = useHoroscopeGenerator();
 
+  const { isModalOpen, shouldShowWarning, handleCloseModal } = useCringeWarning();
+
+  // Enhanced cringe setter that checks for warning
+  const handleCringeChange = (newCringe: typeof cringe): void => {
+    setCringe(newCringe);
+    shouldShowWarning(newCringe);
+  };
+
   return (
     <div className="app">
       <header className="header">
         <h1>🌟 Cringe Horoscope</h1>
         <p>Your daily dose of sarcastic stars ✨</p>
-        
+
         {/* Development Mode Toggle */}
-        <div style={{ 
-          marginTop: '15px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px'
-        }}>
-          <span style={{ fontSize: '12px', color: '#d1d5db' }}>Production</span>
+        <div className="dev-mode-toggle">
+          <span className="dev-mode-label">Production</span>
           <label className="toggle">
-            <input 
-              type="checkbox" 
-              checked={showDevMode} 
+            <input
+              type="checkbox"
+              checked={showDevMode}
               onChange={(e) => setShowDevMode(e.target.checked)}
             />
             <span className="toggle-slider"></span>
           </label>
-          <span style={{ fontSize: '12px', color: '#d1d5db' }}>Dev Mode</span>
+          <span className="dev-mode-label">Dev Mode</span>
         </div>
       </header>
 
@@ -78,7 +82,7 @@ function App() {
                 onSignChange={setSign}
                 onDayChange={setDay}
                 onModeChange={setMode}
-                onCringeChange={setCringe}
+                onCringeChange={handleCringeChange}
                 onDeterministicChange={setDeterministic}
               />
 
@@ -98,7 +102,8 @@ function App() {
               <div className="text-center">
                 <h2 className="text-xl mb-md">🛠️ Development & Testing Mode</h2>
                 <p className="text-secondary">
-                  Backend testing components for API integration, determinism, and content generation
+                  Backend testing components for API integration, determinism, and content
+                  generation
                 </p>
               </div>
 
@@ -113,6 +118,9 @@ function App() {
       <footer className="text-center text-secondary text-sm">
         <p>Built with React, TypeScript, and a healthy dose of sarcasm</p>
       </footer>
+
+      {/* Cringe Warning Modal */}
+      <CringeWarningModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 }

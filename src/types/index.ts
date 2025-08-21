@@ -14,7 +14,7 @@ export interface Options {
 export interface OfficialHoroscope {
   text: string;
   luckyColor?: string;
-  luckyNumber?: number;
+  luckyNumber?: number | string;
 }
 
 export interface RoastHoroscope {
@@ -25,7 +25,7 @@ export interface HoroscopeResult {
   text: string;
   source: "official" | "roast" | "mix";
   luckyColor?: string;
-  luckyNumber?: number;
+  luckyNumber?: number | string;
 }
 
 export interface RawHoroscopeData {

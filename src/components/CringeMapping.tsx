@@ -52,7 +52,7 @@ const CringeMapping = ({ selectedSign = 'aries' }: CringeMappingProps): ReactNod
               border: `1px solid ${getCringeColor(selectedCringe)}40`,
               borderRadius: '12px',
               fontSize: '11px',
-              color: '#333'
+              color: '#000000'
             }}
           >
             {item}
@@ -71,7 +71,7 @@ const CringeMapping = ({ selectedSign = 'aries' }: CringeMappingProps): ReactNod
       borderRadius: '10px',
       border: '1px solid #dee2e6'
     }}>
-      <h2 style={{ margin: '0 0 20px 0', textAlign: 'center' }}>
+      <h2 style={{ margin: '0 0 20px 0', textAlign: 'center', color: '#000000' }}>
         🎛️ Cringe Level Mapping Visualization
       </h2>
 
@@ -94,7 +94,7 @@ const CringeMapping = ({ selectedSign = 'aries' }: CringeMappingProps): ReactNod
         }}>
           Level {selectedCringe}: {mapping.label}
         </h3>
-        <p style={{ margin: '0 0 15px 0', fontStyle: 'italic' }}>
+        <p style={{ margin: '0 0 15px 0', fontStyle: 'italic', color: '#000000' }}>
           {mapping.description}
         </p>
         
@@ -103,7 +103,7 @@ const CringeMapping = ({ selectedSign = 'aries' }: CringeMappingProps): ReactNod
           <h4 style={{ 
             margin: '0 0 8px 0', 
             fontSize: '14px',
-            color: '#666'
+            color: '#000000'
           }}>
             🔧 Transform Features:
           </h4>
@@ -135,7 +135,7 @@ const CringeMapping = ({ selectedSign = 'aries' }: CringeMappingProps): ReactNod
             </h4>
             <div style={{ 
               fontSize: '12px', 
-              color: '#666',
+              color: '#000000',
               backgroundColor: '#f8f9fa',
               padding: '8px',
               borderRadius: '4px',
@@ -258,13 +258,13 @@ const CringeMapping = ({ selectedSign = 'aries' }: CringeMappingProps): ReactNod
             >
               <div style={{ 
                 fontSize: '12px', 
-                color: '#666', 
+                color: '#000000', 
                 marginBottom: '5px',
                 fontWeight: 'bold'
               }}>
                 Sample #{index + 1}:
               </div>
-              <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
+              <div style={{ fontSize: '14px', lineHeight: '1.4', color: '#000000' }}>
                 {text}
               </div>
             </div>

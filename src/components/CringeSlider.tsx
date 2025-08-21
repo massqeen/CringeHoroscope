@@ -84,19 +84,19 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
 
   return (
     <div style={{ marginBottom: '20px' }}>
-      <label
+      <label 
         htmlFor="cringe-slider"
-        style={{
-          display: 'block',
-          marginBottom: '10px',
+        style={{ 
+          display: 'block', 
+          marginBottom: '10px', 
           fontWeight: 'bold',
           fontSize: '16px',
+          color: '#000000'
         }}
       >
         Cringe Level: {value} - {getCringeLabel(value)} {getCringeEmoji(value)}
-      </label>
-
-      <div style={{ position: 'relative', marginBottom: '15px' }}>
+      </label> 
+       <div style={{ position: 'relative', marginBottom: '15px' }}>
         <input
           id="cringe-slider"
           type="range"
@@ -160,15 +160,14 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
       </div>
 
       {/* Level indicators */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
+      <div 
+        style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
           marginBottom: '10px',
           fontSize: '12px',
-          color: '#666',
-        }}
-      >
+          color: 'var(--text-primary)'
+        }}>
         {[0, 1, 2, 3].map((level) => (
           <div
             key={level}
@@ -176,7 +175,7 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
               textAlign: 'center',
               opacity: value === level ? 1 : 0.6,
               fontWeight: value === level ? 'bold' : 'normal',
-              color: value === level ? getCringeColor(level as Cringe) : '#666',
+              color: value === level ? getCringeColor(level as Cringe) : 'var(--text-primary)'
             }}
           >
             <div>{getCringeEmoji(level as Cringe)}</div>
@@ -186,17 +185,16 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
       </div>
 
       {/* Current level description */}
-      <div
-        style={{
-          padding: '10px',
-          backgroundColor: `${getCringeColor(value)}15`,
+      <div 
+        style={{ 
+          padding: '10px', 
+          backgroundColor: `${getCringeColor(value)}15`, 
           border: `1px solid ${getCringeColor(value)}40`,
           borderRadius: '5px',
           fontSize: '14px',
-          color: '#333',
-          textAlign: 'center',
-        }}
-      >
+          color: '#000000',
+          textAlign: 'center'
+        }}>
         <strong>{getCringeDescription(value)}</strong>
       </div>
 
@@ -222,7 +220,7 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
                 value === level ? `2px solid ${getCringeColor(level as Cringe)}` : '1px solid #ddd',
               borderRadius: '20px',
               backgroundColor: value === level ? `${getCringeColor(level as Cringe)}20` : 'white',
-              color: value === level ? getCringeColor(level as Cringe) : '#666',
+              color: value === level ? getCringeColor(level as Cringe) : '#000000',
               cursor: disabled ? 'not-allowed' : 'pointer',
               fontSize: '12px',
               fontWeight: value === level ? 'bold' : 'normal',

@@ -1,0 +1,80 @@
+/* HoroscopeDisplay specific styles */
+.errorDisplay {
+  padding: 20px;
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  border: 1px solid #fed7d7;
+  text-align: center;
+  font-size: 16px;
+}
+
+.horoscopeResultContainer {
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.horoscopeMainCard {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 30px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.horoscopeDecoration1 {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.horoscopeDecoration2 {
+  position: absolute;
+  bottom: -30px;
+  left: -30px;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.horoscopeTextContainer {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
+}
+
+.horoscopeTextContent {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.7;
+  color: #2d3748;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Export Button Container - positioned outside export content */
+.exportButtonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}

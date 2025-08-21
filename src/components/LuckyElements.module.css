@@ -1,0 +1,71 @@
+/* Lucky Elements specific styles */
+.luckyElementsCard {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(240, 147, 251, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.luckyElementsDecoration {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 40px;
+  opacity: 0.3;
+}
+
+.luckyElementsContent {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.luckyElementsTitle {
+  margin: 0 0 15px 0;
+  color: #2d3748;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.luckyElementsGrid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.luckyElementItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.luckyNumberBadge {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.luckyColorBadge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.luckyTitle {
+  color: black;
+}

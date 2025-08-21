@@ -5,6 +5,7 @@ import { composeResult } from '../services/horoscopeComposer';
 import { generateDeterministicSeed } from '../utils/prng';
 import GenerateButton from './GenerateButton';
 import LuckyElements from './LuckyElements';
+import ExportButton from './ExportButton';
 import styles from './HoroscopeDisplay.module.css';
 import type { ZodiacSign, Day, Cringe, Mode, HoroscopeResult } from '../types';
 
@@ -186,23 +187,30 @@ const HoroscopeDisplay = ({
 
       {/* Final Composed Result - Production Style */}
       {composedResult && (
-        <div className={styles.horoscopeResultContainer}>
-          {/* Main horoscope content */}
-          <div className={styles.horoscopeMainCard}>
-            {/* Decorative background elements */}
-            <div className={styles.horoscopeDecoration1}></div>
-            <div className={styles.horoscopeDecoration2}></div>
+        <>
+          <div id="horoscope-export-content" className={styles.horoscopeResultContainer}>
+            {/* Main horoscope content */}
+            <div className={styles.horoscopeMainCard}>
+              {/* Decorative background elements */}
+              <div className={styles.horoscopeDecoration1}></div>
+              <div className={styles.horoscopeDecoration2}></div>
 
-            <div className={styles.horoscopeTextContainer}>
-              <p className={styles.horoscopeTextContent}>{composedResult.text}</p>
+              <div className={styles.horoscopeTextContainer}>
+                <p className={styles.horoscopeTextContent}>{composedResult.text}</p>
+              </div>
             </div>
+
+            <LuckyElements
+              luckyColor={composedResult.luckyColor}
+              luckyNumber={composedResult.luckyNumber}
+            />
           </div>
 
-          <LuckyElements
-            luckyColor={composedResult.luckyColor}
-            luckyNumber={composedResult.luckyNumber}
-          />
-        </div>
+          {/* Export Button - Outside the export content area */}
+          <div className={styles.exportButtonContainer}>
+            <ExportButton targetElementId="horoscope-export-content" filename="cringe-horoscope" />
+          </div>
+        </>
       )}
     </div>
   );

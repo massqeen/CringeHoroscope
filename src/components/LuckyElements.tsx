@@ -19,7 +19,10 @@ const LuckyElements = ({ luckyColor, luckyNumber }: LuckyElementsProps): ReactNo
       <div className={styles.luckyElementsDecoration}>🌟</div>
 
       <div className={styles.luckyElementsContent}>
-        <h4 className={styles.luckyElementsTitle}>✨ Your Lucky Elements ✨</h4>
+        <div className="mb-md">
+          <h4 className={styles.luckyElementsTitle}>✨ Your Lucky Elements ✨</h4>
+        </div>
+
         <div className={styles.luckyElementsGrid}>
           {luckyColor && (
             <div className={styles.luckyElementItem}>

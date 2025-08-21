@@ -1,4 +1,5 @@
 import type { Mode, Cringe, HoroscopeResult, OfficialHoroscope, RoastHoroscope } from '../types';
+
 import { normalizeOfficial } from './aztroApi';
 
 interface ComposeResultOptions {
@@ -14,10 +15,10 @@ interface ComposeResultOptions {
  */
 function applyCringeTransforms(text: string, cringe: Cringe, seed: number): string {
   if (cringe === 0) return text; // No transforms for level 0
-  
+
   let result = text;
   const rng = createSimpleRng(seed);
-  
+
   switch (cringe) {
     case 1: // Ironic - subtle but noticeable changes
       // 60% chance to add mild interjections
@@ -33,7 +34,7 @@ function applyCringeTransforms(text: string, cringe: Cringe, seed: number): stri
         result = addCasualReplacements(result, rng);
       }
       break;
-      
+
     case 2: // Sarcastic - clearly noticeable changes
       // 80% chance to elongate vowels in 1-2 words
       if (rng() < 0.8) {
@@ -54,7 +55,7 @@ function applyCringeTransforms(text: string, cringe: Cringe, seed: number): stri
         result = addSarcasticEmojis(result, rng);
       }
       break;
-      
+
     case 3: // Cringe Hard - VERY obvious changes
       // 90% chance for alternating caps in 2-3 words
       if (rng() < 0.9) {
@@ -80,7 +81,7 @@ function applyCringeTransforms(text: string, cringe: Cringe, seed: number): stri
       }
       break;
   }
-  
+
   return result;
 }
 
@@ -90,25 +91,23 @@ function applyCringeTransforms(text: string, cringe: Cringe, seed: number): stri
 function applyAlternatingCaps(text: string, wordCount: number, rng: () => number): string {
   const words = text.split(' ');
   const wordsToTransform = Math.min(wordCount, words.length);
-  
+
   for (let i = 0; i < wordsToTransform; i++) {
     const randomIndex = Math.floor(rng() * words.length);
     const word = words[randomIndex];
-    
+
     // Skip if word is too short or already transformed
     if (word.length < 3 || /[A-Z].*[a-z].*[A-Z]/.test(word)) continue;
-    
+
     // Apply alternating caps pattern
     words[randomIndex] = word
       .split('')
-      .map((char, index) => 
-        char.match(/[a-zA-Z]/) 
-          ? (index % 2 === 0 ? char.toLowerCase() : char.toUpperCase())
-          : char
+      .map((char, index) =>
+        char.match(/[a-zA-Z]/) ? (index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()) : char,
       )
       .join('');
   }
-  
+
   return words.join(' ');
 }
 
@@ -118,27 +117,28 @@ function applyAlternatingCaps(text: string, wordCount: number, rng: () => number
 function elongateVowels(text: string, wordCount: number, rng: () => number): string {
   const words = text.split(' ');
   const wordsToTransform = Math.min(wordCount, words.length);
-  
+
   for (let i = 0; i < wordsToTransform; i++) {
     const randomIndex = Math.floor(rng() * words.length);
     const word = words[randomIndex];
-    
+
     // Skip short words or those already elongated
     if (word.length < 3 || /([aeiou])\1{2,}/i.test(word)) continue;
-    
+
     // Find vowels and elongate one randomly
     const vowelMatches = [...word.matchAll(/[aeiou]/gi)];
     if (vowelMatches.length > 0) {
       const randomVowel = vowelMatches[Math.floor(rng() * vowelMatches.length)];
       const vowelIndex = randomVowel.index!;
       const elongationLength = 4 + Math.floor(rng() * 3); // 4-6 repetitions for more obvious effect
-      
-      words[randomIndex] = word.slice(0, vowelIndex + 1) + 
-                          randomVowel[0].repeat(elongationLength - 1) + 
-                          word.slice(vowelIndex + 1);
+
+      words[randomIndex] =
+        word.slice(0, vowelIndex + 1) +
+        randomVowel[0].repeat(elongationLength - 1) +
+        word.slice(vowelIndex + 1);
     }
   }
-  
+
   return words.join(' ');
 }
 
@@ -148,14 +148,14 @@ function elongateVowels(text: string, wordCount: number, rng: () => number): str
 function addMildEmphasis(text: string, rng: () => number): string {
   const emphasisWords = ['really', 'truly', 'definitely', 'absolutely', 'totally'];
   const words = text.split(' ');
-  
+
   // 30% chance to add emphasis word
   if (rng() < 0.3 && words.length > 3) {
     const emphasisWord = emphasisWords[Math.floor(rng() * emphasisWords.length)];
     const insertIndex = 1 + Math.floor(rng() * (words.length - 2));
     words.splice(insertIndex, 0, emphasisWord);
   }
-  
+
   return words.join(' ');
 }
 
@@ -164,30 +164,31 @@ function addMildEmphasis(text: string, rng: () => number): string {
  */
 function addHyperbole(text: string, rng: () => number): string {
   let result = text;
-  
+
   const replacements = {
-    'very': 'EXTREMELY',
-    'really': 'ABSOLUTELY', 
-    'quite': 'INCREDIBLY',
-    'pretty': 'RIDICULOUSLY',
-    'good': 'AMAZING',
-    'bad': 'TERRIBLE',
-    'big': 'HUGE',
-    'small': 'TINY',
-    'nice': 'FANTASTIC',
-    'great': 'PHENOMENAL',
-    'okay': 'MIND-BLOWING',
-    'fine': 'SPECTACULAR'
+    very: 'EXTREMELY',
+    really: 'ABSOLUTELY',
+    quite: 'INCREDIBLY',
+    pretty: 'RIDICULOUSLY',
+    good: 'AMAZING',
+    bad: 'TERRIBLE',
+    big: 'HUGE',
+    small: 'TINY',
+    nice: 'FANTASTIC',
+    great: 'PHENOMENAL',
+    okay: 'MIND-BLOWING',
+    fine: 'SPECTACULAR',
   };
-  
+
   for (const [original, replacement] of Object.entries(replacements)) {
     const regex = new RegExp(`\\b${original}\\b`, 'gi');
-    if (rng() < 0.5 && regex.test(result)) { // 50% chance to replace
+    if (rng() < 0.5 && regex.test(result)) {
+      // 50% chance to replace
       result = result.replace(regex, replacement);
       break; // Only replace one word to avoid over-transformation
     }
   }
-  
+
   return result;
 }
 
@@ -196,17 +197,17 @@ function addHyperbole(text: string, rng: () => number): string {
  */
 function addCasualReplacements(text: string, rng: () => number): string {
   let result = text;
-  
+
   const casualReplacements = {
-    'you will': 'you\'ll',
-    'you are': 'you\'re',
-    'it is': 'it\'s',
-    'will be': '\'ll be',
-    'should': 'should probably',
-    'may': 'might',
-    'perhaps': 'maybe'
+    'you will': "you'll",
+    'you are': "you're",
+    'it is': "it's",
+    'will be': "'ll be",
+    should: 'should probably',
+    may: 'might',
+    perhaps: 'maybe',
   };
-  
+
   for (const [original, replacement] of Object.entries(casualReplacements)) {
     const regex = new RegExp(`\\b${original}\\b`, 'gi');
     if (rng() < 0.4 && regex.test(result)) {
@@ -214,7 +215,7 @@ function addCasualReplacements(text: string, rng: () => number): string {
       break;
     }
   }
-  
+
   return result;
 }
 
@@ -223,17 +224,17 @@ function addCasualReplacements(text: string, rng: () => number): string {
  */
 function addSarcasticReplacements(text: string, rng: () => number): string {
   let result = text;
-  
+
   const sarcasticReplacements = {
-    'wonderful': 'absolutely wonderful',
-    'perfect': 'totally perfect',
-    'great': 'oh-so-great',
-    'amazing': 'super amazing',
-    'excellent': 'just excellent',
-    'beautiful': 'perfectly beautiful',
-    'successful': 'wildly successful'
+    wonderful: 'absolutely wonderful',
+    perfect: 'totally perfect',
+    great: 'oh-so-great',
+    amazing: 'super amazing',
+    excellent: 'just excellent',
+    beautiful: 'perfectly beautiful',
+    successful: 'wildly successful',
   };
-  
+
   for (const [original, replacement] of Object.entries(sarcasticReplacements)) {
     const regex = new RegExp(`\\b${original}\\b`, 'gi');
     if (rng() < 0.6 && regex.test(result)) {
@@ -241,7 +242,7 @@ function addSarcasticReplacements(text: string, rng: () => number): string {
       break;
     }
   }
-  
+
   return result;
 }
 
@@ -251,7 +252,7 @@ function addSarcasticReplacements(text: string, rng: () => number): string {
 function addSarcasticEmojis(text: string, rng: () => number): string {
   const emojis = ['😏', '🙄', '😌', '✨', '💫'];
   const emoji = emojis[Math.floor(rng() * emojis.length)];
-  
+
   // Add emoji at the end
   return text + ' ' + emoji;
 }
@@ -262,13 +263,13 @@ function addSarcasticEmojis(text: string, rng: () => number): string {
 function addCringeEmojis(text: string, rng: () => number): string {
   const cringeEmojis = ['💅', '✨', '💫', '🔥', '💯', '😍', '🤩', '👑', '💎'];
   const numEmojis = 1 + Math.floor(rng() * 2); // 1-2 emojis
-  
+
   let result = text;
   for (let i = 0; i < numEmojis; i++) {
     const emoji = cringeEmojis[Math.floor(rng() * cringeEmojis.length)];
     result += ' ' + emoji;
   }
-  
+
   return result;
 }
 
@@ -278,17 +279,17 @@ function addCringeEmojis(text: string, rng: () => number): string {
 function addRandomCaps(text: string, wordCount: number, rng: () => number): string {
   const words = text.split(' ');
   const wordsToTransform = Math.min(wordCount, words.length);
-  
+
   for (let i = 0; i < wordsToTransform; i++) {
     const randomIndex = Math.floor(rng() * words.length);
     const word = words[randomIndex];
-    
+
     // Skip if word is too short, already caps, or has punctuation
     if (word.length < 3 || word === word.toUpperCase() || /[^a-zA-Z]/.test(word)) continue;
-    
+
     words[randomIndex] = word.toUpperCase();
   }
-  
+
   return words.join(' ');
 }
 
@@ -298,12 +299,12 @@ function addRandomCaps(text: string, wordCount: number, rng: () => number): stri
 function insertMildInterjections(text: string, rng: () => number): string {
   const interjections = ['honestly', 'seriously', 'clearly', 'obviously'];
   const sentences = text.split(/([.!?]+)/);
-  
+
   if (sentences.length > 1 && rng() < 0.5) {
     const interjection = interjections[Math.floor(rng() * interjections.length)];
     sentences.splice(1, 0, ` ${interjection},`);
   }
-  
+
   return sentences.join('');
 }
 
@@ -311,26 +312,29 @@ function insertMildInterjections(text: string, rng: () => number): string {
  * Inserts stronger interjections
  */
 function insertInterjections(text: string, maxCount: number, rng: () => number): string {
-  const interjections = ['tbh', 'ngl', 'fr fr', 'periodt', 'no cap', 'bestie', 'sis', 'facts', 'tea'];
+  const interjections = [
+    'tbh',
+    'ngl',
+    'fr fr',
+    'periodt',
+    'no cap',
+    'bestie',
+    'sis',
+    'facts',
+    'tea',
+  ];
   const sentences = text.split(/([.!?]+)/);
-  
+
   for (let i = 0; i < maxCount && sentences.length > 1; i++) {
-    if (rng() < 0.8) { // Increased chance from 0.6 to 0.8
+    if (rng() < 0.8) {
+      // Increased chance from 0.6 to 0.8
       const interjection = interjections[Math.floor(rng() * interjections.length)];
       const insertIndex = 1 + Math.floor(rng() * (sentences.length - 1));
       sentences.splice(insertIndex, 0, ` ${interjection},`);
     }
   }
-  
-  return sentences.join('');
-}
 
-interface ComposeResultOptions {
-  mode: Mode;
-  official: OfficialHoroscope;
-  roast: RoastHoroscope;
-  cringe: Cringe;
-  seed: number;
+  return sentences.join('');
 }
 
 /**
@@ -339,10 +343,10 @@ interface ComposeResultOptions {
 function generateCringeFormula(originalNumber: number | string | undefined, seed: number): string {
   // If it's already a string (formula), return it as-is
   if (typeof originalNumber === 'string') return originalNumber;
-  
+
   // If no number provided, use a default
-  if (!originalNumber) return "π + 42";
-  
+  if (!originalNumber) return 'π + 42';
+
   const rng = createSimpleRng(seed + 999);
   const formulas = [
     `${originalNumber} × ∞`,
@@ -359,9 +363,9 @@ function generateCringeFormula(originalNumber: number | string | undefined, seed
     `${originalNumber} + π - π`,
     `${originalNumber} × i ÷ i`,
     `⌊${originalNumber}.0⌋`,
-    `⌈${originalNumber}.0⌉`
+    `⌈${originalNumber}.0⌉`,
   ];
-  
+
   return formulas[Math.floor(rng() * formulas.length)];
 }
 
@@ -372,33 +376,35 @@ function generateCringeFormula(originalNumber: number | string | undefined, seed
  */
 export function composeResult(options: ComposeResultOptions): HoroscopeResult {
   const { mode, official, roast, cringe, seed } = options;
-  
+
   switch (mode) {
-    case 'official':
+    case 'official': {
       // Apply cringe transforms to official text
       const transformedText = applyCringeTransforms(official.text, cringe, seed);
-      
+
       // For cringe level 3, replace lucky number with funny formula
-      const processedLuckyNumber = cringe === 3 
-        ? generateCringeFormula(official.luckyNumber, seed)
-        : official.luckyNumber;
-      
+      const processedLuckyNumber =
+        cringe === 3 ? generateCringeFormula(official.luckyNumber, seed) : official.luckyNumber;
+
       return {
         text: transformedText,
         luckyColor: official.luckyColor,
         luckyNumber: processedLuckyNumber,
-        source: 'official'
+        source: 'official',
       };
-      
-    case 'roast':
+    }
+
+    case 'roast': {
       return {
         text: roast.text,
-        source: 'roast'
+        source: 'roast',
       };
-      
-    case 'mix':
+    }
+
+    case 'mix': {
       return composeMixedResult(official, roast, cringe, options.seed);
-      
+    }
+
     default:
       throw new Error(`Unknown mode: ${mode}`);
   }
@@ -408,38 +414,38 @@ export function composeResult(options: ComposeResultOptions): HoroscopeResult {
  * Creates a mixed result combining official and roast content
  */
 function composeMixedResult(
-  official: OfficialHoroscope, 
-  roast: RoastHoroscope, 
+  official: OfficialHoroscope,
+  roast: RoastHoroscope,
   cringe: Cringe,
-  seed: number
+  seed: number,
 ): HoroscopeResult {
   // Apply cringe transforms to official text before mixing (limit to max level 2 for mix mode)
   const mixCringe = Math.min(cringe, 2) as Cringe;
   const transformedOfficialText = applyCringeTransforms(official.text, mixCringe, seed);
-  
+
   // Normalize both texts into sentences
   const officialSentences = normalizeOfficial(transformedOfficialText);
   const roastSentences = normalizeOfficial(roast.text);
-  
+
   // Use seed for deterministic mixing
   const rng = createSimpleRng(seed + 1); // Use different seed for mixing
-  
+
   // Take 1-2 sentences from official
   const numOfficialSentences = Math.min(
     officialSentences.length,
-    1 + Math.floor(rng() * 2) // 1 or 2 sentences
+    1 + Math.floor(rng() * 2), // 1 or 2 sentences
   );
-  
+
   // Take 1-2 sentences from roast
   const numRoastSentences = Math.min(
     roastSentences.length,
-    1 + Math.floor(rng() * 2) // 1 or 2 sentences
+    1 + Math.floor(rng() * 2), // 1 or 2 sentences
   );
-  
+
   // Select sentences
   const selectedOfficial = officialSentences.slice(0, numOfficialSentences);
   const selectedRoast = roastSentences.slice(0, numRoastSentences);
-  
+
   // Decide mixing order (50/50 chance to start with official or roast)
   let mixedSentences: string[];
   if (rng() < 0.5) {
@@ -449,25 +455,25 @@ function composeMixedResult(
     // Start with roast
     mixedSentences = [...selectedRoast, ...selectedOfficial];
   }
-  
+
   // For cringe level 2+, add a short punchline
   if (cringe >= 2) {
     const punchlines = [
-      "Just saying.",
+      'Just saying.',
       "You're welcome.",
-      "Deal with it.",
+      'Deal with it.',
       "That's the tea.",
-      "No cap."
+      'No cap.',
     ];
-    
+
     if (cringe === 3) {
       // More intense punchlines for level 3
       const intensePunchlines = [
-        "PERIOD.",
-        "FACTS ONLY.",
+        'PERIOD.',
+        'FACTS ONLY.',
         "THAT'S IT. THAT'S THE TWEET.",
-        "MAIN CHARACTER ENERGY.",
-        "ICONIC BEHAVIOR."
+        'MAIN CHARACTER ENERGY.',
+        'ICONIC BEHAVIOR.',
       ];
       const punchline = intensePunchlines[Math.floor(rng() * intensePunchlines.length)];
       mixedSentences.push(punchline);
@@ -476,22 +482,19 @@ function composeMixedResult(
       mixedSentences.push(punchline);
     }
   }
-  
+
   // Join sentences with proper spacing
-  const finalText = mixedSentences
-    .filter(sentence => sentence.trim().length > 0)
-    .join(' ');
+  const finalText = mixedSentences.filter((sentence) => sentence.trim().length > 0).join(' ');
 
   // For cringe level 3, replace lucky number with funny formula
-  const processedLuckyNumber = cringe === 3 
-    ? generateCringeFormula(official.luckyNumber, seed)
-    : official.luckyNumber;
-  
+  const processedLuckyNumber =
+    cringe === 3 ? generateCringeFormula(official.luckyNumber, seed) : official.luckyNumber;
+
   return {
     text: finalText,
     luckyColor: official.luckyColor,
     luckyNumber: processedLuckyNumber,
-    source: 'mix'
+    source: 'mix',
   };
 }
 
@@ -500,7 +503,7 @@ function composeMixedResult(
  */
 function createSimpleRng(seed: number): () => number {
   let state = seed;
-  return function() {
+  return function () {
     state = (state * 9301 + 49297) % 233280;
     return state / 233280;
   };
@@ -530,12 +533,12 @@ export function getCompositionStats(result: HoroscopeResult): {
   wordCount: number;
   hasLuckyInfo: boolean;
 } {
-  const sentences = result.text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-  const words = result.text.split(/\s+/).filter(w => w.trim().length > 0);
-  
+  const sentences = result.text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
+  const words = result.text.split(/\s+/).filter((w) => w.trim().length > 0);
+
   return {
     sentenceCount: sentences.length,
     wordCount: words.length,
-    hasLuckyInfo: !!(result.luckyColor || result.luckyNumber)
+    hasLuckyInfo: !!(result.luckyColor || result.luckyNumber),
   };
 }

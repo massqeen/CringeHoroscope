@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
+
 import { getCssColor, getTextColor, isLightColor } from '../utils/colorUtils';
+
 import styles from './LuckyElements.module.css';
 
 interface LuckyElementsProps {

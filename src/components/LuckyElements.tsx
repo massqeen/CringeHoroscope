@@ -4,7 +4,7 @@ import styles from './LuckyElements.module.css';
 
 interface LuckyElementsProps {
   luckyColor?: string;
-  luckyNumber?: number;
+  luckyNumber?: number | string;
 }
 
 const LuckyElements = ({ luckyColor, luckyNumber }: LuckyElementsProps): ReactNode => {

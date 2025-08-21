@@ -1,4 +1,5 @@
 import { ZodiacSign, Day, Mode, Cringe, ZODIAC_SIGNS, CRINGE_LABELS } from '../types';
+import styles from './HoroscopeControls.module.css';
 
 interface HoroscopeControlsProps {
   sign: ZodiacSign;
@@ -162,7 +163,7 @@ export default function HoroscopeControls({
           max="3"
           value={cringe}
           onChange={handleCringeChange}
-          className="slider"
+          className={styles.slider}
           aria-label="Adjust cringe level from gentle to hard"
         />
 
@@ -175,9 +176,7 @@ export default function HoroscopeControls({
                 onCringeChange(0);
               }
             }}
-            className={`cursor-pointer transition-all hover:text-primary ${
-              cringe === 0 ? 'text-primary' : 'text-secondary'
-            }`}
+            className={`${styles.cringeButton} ${cringe === 0 ? 'text-primary' : 'text-secondary'}`}
             aria-label="Set cringe level to gentle"
             tabIndex={0}
             role="button"
@@ -193,9 +192,7 @@ export default function HoroscopeControls({
                 onCringeChange(1);
               }
             }}
-            className={`cursor-pointer transition-all hover:text-primary ${
-              cringe === 1 ? 'text-primary' : 'text-secondary'
-            }`}
+            className={`${styles.cringeButton} ${cringe === 1 ? 'text-primary' : 'text-secondary'}`}
             aria-label="Set cringe level to ironic"
             tabIndex={0}
             role="button"
@@ -211,9 +208,7 @@ export default function HoroscopeControls({
                 onCringeChange(2);
               }
             }}
-            className={`cursor-pointer transition-all hover:text-primary ${
-              cringe === 2 ? 'text-primary' : 'text-secondary'
-            }`}
+            className={`${styles.cringeButton} ${cringe === 2 ? 'text-primary' : 'text-secondary'}`}
             aria-label="Set cringe level to sarcastic"
             tabIndex={0}
             role="button"
@@ -229,9 +224,7 @@ export default function HoroscopeControls({
                 onCringeChange(3);
               }
             }}
-            className={`cursor-pointer transition-all hover:text-primary ${
-              cringe === 3 ? 'text-primary' : 'text-secondary'
-            }`}
+            className={`${styles.cringeButton} ${cringe === 3 ? 'text-primary' : 'text-secondary'}`}
             aria-label="Set cringe level to chaos"
             tabIndex={0}
             role="button"
@@ -253,7 +246,7 @@ export default function HoroscopeControls({
             Same settings = same result (perfect for sharing)
           </p>
         </div>
-        <label className="toggle">
+        <label className={styles.toggle}>
           <input
             id="deterministic-toggle"
             type="checkbox"
@@ -261,7 +254,7 @@ export default function HoroscopeControls({
             onChange={handleDeterministicChange}
             aria-label="Enable deterministic mode for consistent results"
           />
-          <span className="toggle-slider"></span>
+          <span className={styles.toggleSlider}></span>
         </label>
       </div>
     </div>

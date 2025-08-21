@@ -1,0 +1,27 @@
+/* Generate horoscope button */
+.generateButton {
+  padding: 20px 40px;
+  font-size: 20px;
+  font-weight: bold;
+  min-width: 280px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.generateButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.generateButton:disabled {
+  opacity: 0.7;
+}
+
+.generateButtonContainer {
+  margin-bottom: 30px;
+  text-align: center;
+}

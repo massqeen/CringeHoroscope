@@ -1,4 +1,5 @@
-import { ZodiacSign, Day, Mode, Cringe, ZODIAC_SIGNS, CRINGE_LABELS } from '../types';
+import { ZodiacSign, Day, Mode, Cringe, ZODIAC_SIGNS } from '../types';
+
 import styles from './HoroscopeControls.module.css';
 
 interface HoroscopeControlsProps {

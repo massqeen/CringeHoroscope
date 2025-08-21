@@ -1,9 +1,9 @@
 /**
  * Mulberry32 PRNG implementation for deterministic random generation
- * 
+ *
  * Features:
  * - High-quality pseudorandom number generation
- * - Full period of 2^32 
+ * - Full period of 2^32
  * - Fast performance (~1-2 million operations/second)
  * - Deterministic output from same seed
  */
@@ -19,10 +19,10 @@ export class PRNG {
    * Uses Mulberry32 algorithm for high-quality randomness
    */
   public next(): number {
-    let t = this.state += 0x6D2B79F5;
-    t = Math.imul(t ^ t >>> 15, t | 1);
-    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    let t = (this.state += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   }
 
   /**
@@ -96,20 +96,20 @@ export class PRNG {
  */
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0; // Ensure unsigned 32-bit integer
-  return function() {
+  return function () {
     a |= 0;
-    a = a + 0x6D2B79F5 | 0;
-    let t = Math.imul(a ^ a >>> 15, 1 | a);
-    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
 
 /**
  * Generate seed from sign, date and cringe level for deterministic mode
  * Formula: hash(sign|YYYY-MM-DD|cringe) using djb2 algorithm
- * 
- * @param sign - Zodiac sign (e.g., "aries", "scorpio")  
+ *
+ * @param sign - Zodiac sign (e.g., "aries", "scorpio")
  * @param date - Date in YYYY-MM-DD format
  * @param cringe - Cringe level (0-3)
  * @returns 32-bit positive integer seed
@@ -117,20 +117,20 @@ export function mulberry32(seed: number): () => number {
 export function generateDeterministicSeed(sign: string, date: string, cringe: number): number {
   const seedString = `${sign}|${date}|${cringe}`;
   let hash = 5381; // djb2 initial value
-  
+
   for (let i = 0; i < seedString.length; i++) {
     const char = seedString.charCodeAt(i);
-    hash = ((hash << 5) + hash) + char; // hash * 33 + char
+    hash = (hash << 5) + hash + char; // hash * 33 + char
     hash = hash & hash; // Convert to 32bit integer
   }
-  
+
   return Math.abs(hash) >>> 0; // Ensure positive unsigned 32-bit integer
 }
 
 /**
  * Generate random seed using crypto API for true randomness
  * Falls back to Math.random() if crypto is unavailable
- * 
+ *
  * @returns 32-bit positive integer seed
  */
 export function generateRandomSeed(): number {
@@ -143,7 +143,7 @@ export function generateRandomSeed(): number {
       // Fallback for environments without crypto API
       return Math.floor(Math.random() * 4294967296) >>> 0;
     }
-  } catch (error) {
+  } catch {
     // Final fallback
     return Math.floor(Math.random() * 4294967296) >>> 0;
   }
@@ -155,24 +155,34 @@ export function generateRandomSeed(): number {
 export function validateSeedParams(sign: string, date: string, cringe: number): boolean {
   // Validate sign
   const validSigns = [
-    'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-    'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces'
+    'aries',
+    'taurus',
+    'gemini',
+    'cancer',
+    'leo',
+    'virgo',
+    'libra',
+    'scorpio',
+    'sagittarius',
+    'capricorn',
+    'aquarius',
+    'pisces',
   ];
-  
+
   if (!validSigns.includes(sign.toLowerCase())) {
     throw new Error(`Invalid zodiac sign: ${sign}`);
   }
-  
+
   // Validate date format (basic check)
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     throw new Error(`Invalid date format: ${date}. Expected YYYY-MM-DD`);
   }
-  
+
   // Validate cringe level
   if (!Number.isInteger(cringe) || cringe < 0 || cringe > 3) {
     throw new Error(`Invalid cringe level: ${cringe}. Expected 0-3`);
   }
-  
+
   return true;
 }
 
@@ -181,7 +191,7 @@ export function validateSeedParams(sign: string, date: string, cringe: number): 
  */
 export function createSeededOperations(seed: number) {
   const rng = new PRNG(seed);
-  
+
   return {
     random: () => rng.next(),
     randomInt: (min: number, max: number) => rng.nextInt(min, max),
@@ -194,7 +204,7 @@ export function createSeededOperations(seed: number) {
       const u2 = rng.next();
       const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
       return z0 * stdDev + mean;
-    }
+    },
   };
 }
 
@@ -204,17 +214,17 @@ export function createSeededOperations(seed: number) {
 export function compareSeedSequences(seed1: number, seed2: number, length: number = 10) {
   const rng1 = mulberry32(seed1);
   const rng2 = mulberry32(seed2);
-  
+
   const seq1 = Array.from({ length }, () => rng1());
   const seq2 = Array.from({ length }, () => rng2());
-  
+
   return {
     seed1,
     seed2,
     sequence1: seq1,
     sequence2: seq2,
     identical: JSON.stringify(seq1) === JSON.stringify(seq2),
-    correlation: calculateCorrelation(seq1, seq2)
+    correlation: calculateCorrelation(seq1, seq2),
   };
 }
 
@@ -223,16 +233,16 @@ export function compareSeedSequences(seed1: number, seed2: number, length: numbe
  */
 function calculateCorrelation(x: number[], y: number[]): number {
   if (x.length !== y.length) return 0;
-  
+
   const n = x.length;
   const sumX = x.reduce((a, b) => a + b, 0);
   const sumY = y.reduce((a, b) => a + b, 0);
   const sumXY = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
   const sumX2 = x.reduce((sum, xi) => sum + xi * xi, 0);
   const sumY2 = y.reduce((sum, yi) => sum + yi * yi, 0);
-  
+
   const numerator = n * sumXY - sumX * sumY;
   const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
-  
+
   return denominator === 0 ? 0 : numerator / denominator;
 }

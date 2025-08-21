@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { generateDeterministicSeed, generateRandomSeed, mulberry32, PRNG } from '../utils/prng';
 import { generateRoast } from '../services/roastGenerator';
 import type { ZodiacSign, Cringe } from '../types';

@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
+
 import styles from './CringeWarningModal.module.css';
 
 interface CringeWarningModalProps {

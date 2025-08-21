@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+
 import type { Cringe } from '../types';
 
 interface CringeSliderProps {
@@ -23,41 +24,61 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
 
   const getCringeLabel = (level: Cringe): string => {
     switch (level) {
-      case 0: return 'Mild';
-      case 1: return 'Ironic';
-      case 2: return 'Sarcastic';
-      case 3: return 'Cringe Hard';
-      default: return 'Unknown';
+      case 0:
+        return 'Mild';
+      case 1:
+        return 'Ironic';
+      case 2:
+        return 'Sarcastic';
+      case 3:
+        return 'Cringe Hard';
+      default:
+        return 'Unknown';
     }
   };
 
   const getCringeDescription = (level: Cringe): string => {
     switch (level) {
-      case 0: return 'Gentle and pleasant vibes';
-      case 1: return 'Light sarcasm and wit';
-      case 2: return 'Sharp sarcasm and attitude';
-      case 3: return 'Maximum chaos and cringe';
-      default: return '';
+      case 0:
+        return 'Gentle and pleasant vibes';
+      case 1:
+        return 'Light sarcasm and wit';
+      case 2:
+        return 'Sharp sarcasm and attitude';
+      case 3:
+        return 'Maximum chaos and cringe';
+      default:
+        return '';
     }
   };
 
   const getCringeColor = (level: Cringe): string => {
     switch (level) {
-      case 0: return '#28a745'; // Green
-      case 1: return '#ffc107'; // Yellow
-      case 2: return '#fd7e14'; // Orange
-      case 3: return '#dc3545'; // Red
-      default: return '#6c757d';
+      case 0:
+        return '#28a745'; // Green
+      case 1:
+        return '#ffc107'; // Yellow
+      case 2:
+        return '#fd7e14'; // Orange
+      case 3:
+        return '#dc3545'; // Red
+      default:
+        return '#6c757d';
     }
   };
 
   const getCringeEmoji = (level: Cringe): string => {
     switch (level) {
-      case 0: return '😊';
-      case 1: return '😏';
-      case 2: return '😈';
-      case 3: return '🤡';
-      default: return '🤔';
+      case 0:
+        return '😊';
+      case 1:
+        return '😏';
+      case 2:
+        return '😈';
+      case 3:
+        return '🤡';
+      default:
+        return '🤔';
     }
   };
 
@@ -74,7 +95,8 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
         }}
       >
         Cringe Level: {value} - {getCringeLabel(value)} {getCringeEmoji(value)}
-      </label>      <div style={{ position: 'relative', marginBottom: '15px' }}>
+      </label> 
+       <div style={{ position: 'relative', marginBottom: '15px' }}>
         <input
           id="cringe-slider"
           type="range"
@@ -99,10 +121,10 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
             cursor: disabled ? 'not-allowed' : 'pointer',
             opacity: disabled ? 0.5 : 1,
             WebkitAppearance: 'none',
-            appearance: 'none'
+            appearance: 'none',
           }}
         />
-        
+
         {/* Custom slider thumb styling */}
         <style>
           {`
@@ -138,17 +160,18 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
       </div>
 
       {/* Level indicators */}
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        marginBottom: '10px',
-        fontSize: '12px',
-        color: 'var(--text-primary)'
-      }}>
+      <div 
+        style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          marginBottom: '10px',
+          fontSize: '12px',
+          color: 'var(--text-primary)'
+        }}>
         {[0, 1, 2, 3].map((level) => (
-          <div 
+          <div
             key={level}
-            style={{ 
+            style={{
               textAlign: 'center',
               opacity: value === level ? 1 : 0.6,
               fontWeight: value === level ? 'bold' : 'normal',
@@ -162,25 +185,28 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
       </div>
 
       {/* Current level description */}
-      <div style={{ 
-        padding: '10px', 
-        backgroundColor: `${getCringeColor(value)}15`, 
-        border: `1px solid ${getCringeColor(value)}40`,
-        borderRadius: '5px',
-        fontSize: '14px',
-        color: '#000000',
-        textAlign: 'center'
-      }}>
+      <div 
+        style={{ 
+          padding: '10px', 
+          backgroundColor: `${getCringeColor(value)}15`, 
+          border: `1px solid ${getCringeColor(value)}40`,
+          borderRadius: '5px',
+          fontSize: '14px',
+          color: '#000000',
+          textAlign: 'center'
+        }}>
         <strong>{getCringeDescription(value)}</strong>
       </div>
 
       {/* Quick selection buttons */}
-      <div style={{ 
-        marginTop: '10px', 
-        display: 'flex', 
-        gap: '5px', 
-        justifyContent: 'center' 
-      }}>
+      <div
+        style={{
+          marginTop: '10px',
+          display: 'flex',
+          gap: '5px',
+          justifyContent: 'center',
+        }}
+      >
         {[0, 1, 2, 3].map((level) => (
           <button
             key={level}
@@ -190,7 +216,8 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
             aria-label={`Set cringe level to ${level}: ${getCringeLabel(level as Cringe)}`}
             style={{
               padding: '8px 12px',
-              border: value === level ? `2px solid ${getCringeColor(level as Cringe)}` : '1px solid #ddd',
+              border:
+                value === level ? `2px solid ${getCringeColor(level as Cringe)}` : '1px solid #ddd',
               borderRadius: '20px',
               backgroundColor: value === level ? `${getCringeColor(level as Cringe)}20` : 'white',
               color: value === level ? getCringeColor(level as Cringe) : '#000000',
@@ -198,7 +225,7 @@ const CringeSlider = ({ value, onChange, disabled = false }: CringeSliderProps):
               fontSize: '12px',
               fontWeight: value === level ? 'bold' : 'normal',
               opacity: disabled ? 0.5 : 1,
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
             }}
           >
             {level} {getCringeEmoji(level as Cringe)}
